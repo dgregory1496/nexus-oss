@@ -13,6 +13,8 @@
 
 package org.sonatype.nexus.repository.storage;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -174,18 +176,17 @@ public class StorageFacetImpl
         log.debug("Visit before: cursor={}, visitor={}", cursor, visitor);
         visitor.before(tx);
       }
-      try (StorageTx tx = openTx()) {
-        while (true) {
+      while (true) {
+        try (StorageTx tx = openTx()) {
           try {
-            final Iterable<T> nodes = cursor.next(tx);
-            if (nodes == null) {
+            final List<T> nodes = cursor.next(tx);
+            if (nodes.isEmpty()) {
               log.debug("Components cursor exhausted: cursor={}, visitor={}", cursor, visitor);
               break;
             }
             for (T node : nodes) {
               visitor.visit(tx, node);
             }
-            tx.commit();
           }
           catch (Exception e) {
             log.warn("Visiting failed: cursor={}, visitor={}", cursor, visitor, e);

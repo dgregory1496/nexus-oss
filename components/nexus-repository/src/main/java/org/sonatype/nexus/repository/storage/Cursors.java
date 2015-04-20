@@ -13,6 +13,7 @@
 package org.sonatype.nexus.repository.storage;
 
 import java.util.Formatter;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -22,6 +23,8 @@ import javax.annotation.Nullable;
 import org.sonatype.nexus.repository.Repository;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -118,14 +121,19 @@ public class Cursors
 
     @Nonnull
     @Override
-    public Iterable<Component> next(final StorageTx tx) {
+    public List<Component> next(final StorageTx tx) {
       try {
-        return tx.findComponents(
-            whereClause,
-            parameters,
-            repositories,
-            formatter.format(pagingQuerySuffix, skip, limit).toString()
+        final List<Component> result = Lists.newArrayList();
+        Iterables.addAll(
+            result,
+            tx.findComponents(
+                whereClause,
+                parameters,
+                repositories,
+                formatter.format(pagingQuerySuffix, skip, limit).toString()
+            )
         );
+        return result;
       }
       finally {
         skip = limit;
