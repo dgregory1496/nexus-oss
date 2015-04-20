@@ -61,4 +61,9 @@ public interface StorageFacet
    */
   <T> void visit(Cursor<T> cursor,
                  Visitor<T> visitor);
+
+  /**
+   * Invokes passed in {@link Processor}s in context of this storage facet.
+   */
+  void process(Processor... processors);
 }

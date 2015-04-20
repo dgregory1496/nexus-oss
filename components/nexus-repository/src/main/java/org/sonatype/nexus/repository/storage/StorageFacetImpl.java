@@ -13,6 +13,7 @@
 
 package org.sonatype.nexus.repository.storage;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -29,6 +30,7 @@ import org.sonatype.nexus.repository.config.ConfigurationFacet;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Stopwatch;
+import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -204,5 +206,20 @@ public class StorageFacetImpl
       cursor.close();
     }
     log.debug("Visiting finished: cursor={}, visitor={}, time={}", cursor, visitor, stopwatch);
+  }
+
+  @Override
+  public void process(final Processor... processors) {
+    final ProcessorContext context = new ProcessorContext(
+        new Supplier<StorageTx>()
+        {
+          @Override
+          public StorageTx get() {
+            return openTx();
+          }
+        },
+        Arrays.asList(processors).listIterator()
+    );
+    context.proceed();
   }
 }
