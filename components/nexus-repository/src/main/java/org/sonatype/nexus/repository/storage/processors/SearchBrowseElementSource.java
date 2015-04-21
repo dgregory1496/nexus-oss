@@ -9,19 +9,19 @@ import org.elasticsearch.search.SearchHit;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Element source that uses {@link SearchService} and {@link SearchHit} as elements.
+ * Element source that uses {@link SearchService#browse(QueryBuilder)} method and {@link SearchHit} as elements.
  *
  * @since 3.0
  */
-public class SearchElementSource
+public class SearchBrowseElementSource
     extends ValueElementSource<SearchHit>
 {
   private final SearchService searchService;
 
   private final QueryBuilder queryBuilder;
 
-  public SearchElementSource(final SearchService searchService,
-                             final QueryBuilder queryBuilder)
+  public SearchBrowseElementSource(final SearchService searchService,
+                                   final QueryBuilder queryBuilder)
   {
     super(SearchHit.class);
     this.searchService = checkNotNull(searchService);
