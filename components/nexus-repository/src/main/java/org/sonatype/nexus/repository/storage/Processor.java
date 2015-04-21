@@ -7,7 +7,7 @@ package org.sonatype.nexus.repository.storage;
  */
 public abstract class Processor
 {
-g  public void process(final ProcessorContext context) {
+  public void process(final ProcessorContext context) {
     context.proceed();
   }
 }
