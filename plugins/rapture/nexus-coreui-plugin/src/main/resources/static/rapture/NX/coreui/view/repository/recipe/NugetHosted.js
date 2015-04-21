@@ -13,20 +13,31 @@
 /*global Ext, NX*/
 
 /**
- * Repository model.
+ * Repository "Settings" form for a NuGet Hosted repository.
  *
  * @since 3.0
  */
-Ext.define('NX.coreui.model.Repository', {
-  extend: 'Ext.data.Model',
-  idProperty: 'name',
-  fields: [
-    {name: 'name', type: 'string', sortType: 'asUCText'},
-    {name: 'type', type: 'string', sortType: 'asUCText'},
-    {name: 'format', type: 'string', sortType: 'asUCText'},
-    {name: 'recipe', type: 'string', sortType: 'asUCText'},
-    {name: 'status', type: 'auto' /*object*/},
-    {name: 'attributes', type: 'auto' /*object*/},
-    {name: 'url', type: 'string', sortType: 'asUCText'}
-  ]
+Ext.define('NX.coreui.view.repository.recipe.NugetHosted', {
+  extend: 'NX.coreui.view.repository.RepositorySettingsForm',
+  alias: 'widget.nx-coreui-repository-nuget-hosted',
+  requires: [
+    'NX.Conditions',
+    'NX.I18n',
+    'NX.coreui.view.repository.facet.StorageFacet',
+    'NX.coreui.view.repository.facet.ViewFacet'
+  ],
+
+  /**
+   * @override
+   */
+  initComponent: function() {
+    var me = this;
+
+    me.items = [
+      { xtype: 'nx-coreui-repository-view-facet'},
+      { xtype: 'nx-coreui-repository-storage-facet'}
+    ];
+
+    me.callParent(arguments);
+  }
 });

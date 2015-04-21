@@ -13,20 +13,34 @@
 /*global Ext, NX*/
 
 /**
- * Repository model.
+ * Online status of the repository.
  *
  * @since 3.0
  */
-Ext.define('NX.coreui.model.Repository', {
-  extend: 'Ext.data.Model',
-  idProperty: 'name',
-  fields: [
-    {name: 'name', type: 'string', sortType: 'asUCText'},
-    {name: 'type', type: 'string', sortType: 'asUCText'},
-    {name: 'format', type: 'string', sortType: 'asUCText'},
-    {name: 'recipe', type: 'string', sortType: 'asUCText'},
-    {name: 'status', type: 'auto' /*object*/},
-    {name: 'attributes', type: 'auto' /*object*/},
-    {name: 'url', type: 'string', sortType: 'asUCText'}
-  ]
+Ext.define('NX.coreui.view.repository.facet.ViewFacet', {
+  extend: 'Ext.form.FieldContainer',
+  alias: 'widget.nx-coreui-repository-view-facet',
+  requires: [
+    'NX.I18n'
+  ],
+
+  /**
+   * @override
+   */
+  initComponent: function() {
+    var me = this;
+
+    me.items = [
+      {
+        xtype: 'checkbox',
+        name: 'view.online',
+        fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_VIEW_ONLINE'),
+        helpText: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_VIEW_ONLINE_HELP'),
+        value: true
+      }
+    ];
+
+    me.callParent(arguments);
+  }
+
 });

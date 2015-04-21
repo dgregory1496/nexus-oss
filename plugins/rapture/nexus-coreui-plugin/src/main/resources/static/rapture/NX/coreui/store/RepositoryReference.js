@@ -13,20 +13,30 @@
 /*global Ext, NX*/
 
 /**
- * Repository model.
+ * Repository reference store.
  *
  * @since 3.0
  */
-Ext.define('NX.coreui.model.Repository', {
-  extend: 'Ext.data.Model',
-  idProperty: 'name',
-  fields: [
-    {name: 'name', type: 'string', sortType: 'asUCText'},
-    {name: 'type', type: 'string', sortType: 'asUCText'},
-    {name: 'format', type: 'string', sortType: 'asUCText'},
-    {name: 'recipe', type: 'string', sortType: 'asUCText'},
-    {name: 'status', type: 'auto' /*object*/},
-    {name: 'attributes', type: 'auto' /*object*/},
-    {name: 'url', type: 'string', sortType: 'asUCText'}
-  ]
+Ext.define('NX.coreui.store.RepositoryReference', {
+  extend: 'Ext.data.Store',
+  model: 'NX.coreui.model.RepositoryReference',
+
+  proxy: {
+    type: 'direct',
+
+    api: {
+      read: 'NX.direct.coreui_Repository.readReferences'
+    },
+
+    reader: {
+      type: 'json',
+      root: 'data',
+      idProperty: 'id',
+      successProperty: 'success'
+    }
+  },
+
+  sortOnLoad: true,
+  sorters: { property: 'name', direction: 'ASC' }
+
 });

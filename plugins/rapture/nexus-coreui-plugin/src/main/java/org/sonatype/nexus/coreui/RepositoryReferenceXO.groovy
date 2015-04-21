@@ -10,23 +10,20 @@
  * of Sonatype, Inc. Apache Maven is a trademark of the Apache Software Foundation. M2eclipse is a trademark of the
  * Eclipse Foundation. All other trademarks are the property of their respective owners.
  */
-/*global Ext, NX*/
+package org.sonatype.nexus.coreui
+
+import groovy.transform.ToString
+
 
 /**
- * Repository model.
+ * Repository reference exchange object.
  *
  * @since 3.0
  */
-Ext.define('NX.coreui.model.Repository', {
-  extend: 'Ext.data.Model',
-  idProperty: 'name',
-  fields: [
-    {name: 'name', type: 'string', sortType: 'asUCText'},
-    {name: 'type', type: 'string', sortType: 'asUCText'},
-    {name: 'format', type: 'string', sortType: 'asUCText'},
-    {name: 'recipe', type: 'string', sortType: 'asUCText'},
-    {name: 'status', type: 'auto' /*object*/},
-    {name: 'attributes', type: 'auto' /*object*/},
-    {name: 'url', type: 'string', sortType: 'asUCText'}
-  ]
-});
+@ToString(includePackage = false, includeNames = true)
+class RepositoryReferenceXO
+    extends ReferenceXO
+{
+  String type
+  String format
+}

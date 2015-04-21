@@ -13,20 +13,33 @@
 /*global Ext, NX*/
 
 /**
- * Repository model.
+ * Repository "Settings" form for a NuGet Group repository.
  *
  * @since 3.0
  */
-Ext.define('NX.coreui.model.Repository', {
-  extend: 'Ext.data.Model',
-  idProperty: 'name',
-  fields: [
-    {name: 'name', type: 'string', sortType: 'asUCText'},
-    {name: 'type', type: 'string', sortType: 'asUCText'},
-    {name: 'format', type: 'string', sortType: 'asUCText'},
-    {name: 'recipe', type: 'string', sortType: 'asUCText'},
-    {name: 'status', type: 'auto' /*object*/},
-    {name: 'attributes', type: 'auto' /*object*/},
-    {name: 'url', type: 'string', sortType: 'asUCText'}
-  ]
+Ext.define('NX.coreui.view.repository.recipe.NugetGroup', {
+  extend: 'NX.coreui.view.repository.RepositorySettingsForm',
+  alias: 'widget.nx-coreui-repository-nuget-group',
+  requires: [
+    'NX.Conditions',
+    'NX.I18n',
+    'NX.coreui.view.repository.facet.StorageFacet',
+    'NX.coreui.view.repository.facet.ViewFacet',
+    'NX.coreui.view.repository.facet.GroupFacet'
+  ],
+
+  /**
+   * @override
+   */
+  initComponent: function() {
+    var me = this;
+
+    me.items = [
+      { xtype: 'nx-coreui-repository-view-facet'},
+      { xtype: 'nx-coreui-repository-storage-facet'},
+      { xtype: 'nx-coreui-repository-group-facet', format: 'nuget' }
+    ];
+
+    me.callParent(arguments);
+  }
 });

@@ -13,20 +13,28 @@
 /*global Ext, NX*/
 
 /**
- * Repository model.
+ * Select repository recipe panel.
  *
  * @since 3.0
  */
-Ext.define('NX.coreui.model.Repository', {
-  extend: 'Ext.data.Model',
-  idProperty: 'name',
-  fields: [
-    {name: 'name', type: 'string', sortType: 'asUCText'},
-    {name: 'type', type: 'string', sortType: 'asUCText'},
-    {name: 'format', type: 'string', sortType: 'asUCText'},
-    {name: 'recipe', type: 'string', sortType: 'asUCText'},
-    {name: 'status', type: 'auto' /*object*/},
-    {name: 'attributes', type: 'auto' /*object*/},
-    {name: 'url', type: 'string', sortType: 'asUCText'}
+Ext.define('NX.coreui.view.repository.RepositorySelectRecipe', {
+  extend: 'NX.view.drilldown.Master',
+  alias: 'widget.nx-coreui-repository-selectrecipe',
+  requires: [
+    'NX.I18n'
+  ],
+
+  store: 'RepositoryRecipe',
+  columns: [
+    {
+      xtype: 'nx-iconcolumn',
+      width: 36,
+      iconVariant: 'x16',
+      iconName: function() {
+        return 'repository-default';
+      }
+    },
+    { header: 'Recipe', dataIndex: 'name', flex: 1 }
   ]
+
 });

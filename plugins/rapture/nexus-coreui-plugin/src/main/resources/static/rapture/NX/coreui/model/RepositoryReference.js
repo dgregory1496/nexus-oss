@@ -13,20 +13,16 @@
 /*global Ext, NX*/
 
 /**
- * Repository model.
+ * Repository reference model.
  *
  * @since 3.0
  */
-Ext.define('NX.coreui.model.Repository', {
+Ext.define('NX.coreui.model.RepositoryReference', {
   extend: 'Ext.data.Model',
-  idProperty: 'name',
   fields: [
-    {name: 'name', type: 'string', sortType: 'asUCText'},
-    {name: 'type', type: 'string', sortType: 'asUCText'},
-    {name: 'format', type: 'string', sortType: 'asUCText'},
-    {name: 'recipe', type: 'string', sortType: 'asUCText'},
-    {name: 'status', type: 'auto' /*object*/},
-    {name: 'attributes', type: 'auto' /*object*/},
-    {name: 'url', type: 'string', sortType: 'asUCText'}
+    'id',
+    'name',
+    'type',
+    'format'
   ]
 });

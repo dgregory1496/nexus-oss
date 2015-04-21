@@ -13,20 +13,33 @@
 /*global Ext, NX*/
 
 /**
- * Repository model.
+ * Configuration for content type validation of Repository content.
  *
  * @since 3.0
  */
-Ext.define('NX.coreui.model.Repository', {
-  extend: 'Ext.data.Model',
-  idProperty: 'name',
-  fields: [
-    {name: 'name', type: 'string', sortType: 'asUCText'},
-    {name: 'type', type: 'string', sortType: 'asUCText'},
-    {name: 'format', type: 'string', sortType: 'asUCText'},
-    {name: 'recipe', type: 'string', sortType: 'asUCText'},
-    {name: 'status', type: 'auto' /*object*/},
-    {name: 'attributes', type: 'auto' /*object*/},
-    {name: 'url', type: 'string', sortType: 'asUCText'}
-  ]
+Ext.define('NX.coreui.view.repository.facet.RawContentFacet', {
+  extend: 'Ext.form.FieldContainer',
+  alias: 'widget.nx-coreui-repository-content-rawcontent-facet',
+  requires: [
+    'NX.I18n'
+  ],
+
+  /**
+   * @override
+   */
+  initComponent: function() {
+    var me = this;
+
+    me.items = [
+      {
+        xtype: 'checkbox',
+        name: 'rawContent.strictContentTypeValidation',
+        fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_CONTENT_TYPE_VALIDATION'),
+        value: true
+      }
+    ];
+
+    me.callParent(arguments);
+  }
+
 });
