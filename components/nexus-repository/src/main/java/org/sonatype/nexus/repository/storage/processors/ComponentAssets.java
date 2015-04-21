@@ -11,7 +11,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 /**
- * {@link Component}'s {@link Asset} entity source that uses {@link StorageTx#browseAssets(Component)} method. Requires
+ * {@link Component}'s {@link Asset} entiy source that uses {@link StorageTx#browseAssets(Component)} method. Requires
  * {@link Component} in context.
  *
  * @since 3.0

@@ -31,8 +31,8 @@ public class ComponentGroups
           .command(new OCommandSQL("select distinct(group) as val from component limit -1"))
           .execute();
       for (ODocument doc : docs) {
-        final String docGroup = doc.field("val", OType.STRING);
-        groups.add(docGroup);
+        final String docVal = doc.field("val", OType.STRING);
+        groups.add(docVal);
       }
 
     }

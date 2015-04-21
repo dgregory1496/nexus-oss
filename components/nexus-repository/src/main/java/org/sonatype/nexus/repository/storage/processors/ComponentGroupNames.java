@@ -32,8 +32,8 @@ public class ComponentGroupNames
           .command(new OCommandSQL("select distinct(name) as val from component where group=? limit -1"))
           .execute(group);
       for (ODocument doc : docs) {
-        final String docName = doc.field("val", OType.STRING);
-        names.add(docName);
+        final String docVal = doc.field("val", OType.STRING);
+        names.add(docVal);
       }
 
     }

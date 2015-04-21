@@ -34,8 +34,8 @@ public class ComponentGroupNameVersions
           .command(new OCommandSQL("select distinct(version) as val from component where group=? and name=? limit -1"))
           .execute(group, name);
       for (ODocument doc : docs) {
-        final String docVersion = doc.field("val", OType.STRING);
-        versions.add(docVersion);
+        final String docVal = doc.field("val", OType.STRING);
+        versions.add(docVal);
       }
 
     }
