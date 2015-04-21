@@ -20,7 +20,7 @@ import com.google.common.collect.Lists;
  * @since 3.0
  */
 public class Components
-    extends EntityElementSource<Component>
+    extends ValueElementSource<Component>
 {
   @Nullable
   private final String whereClause;

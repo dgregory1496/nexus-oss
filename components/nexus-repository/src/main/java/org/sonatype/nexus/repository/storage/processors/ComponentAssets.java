@@ -17,7 +17,7 @@ import com.google.common.collect.Lists;
  * @since 3.0
  */
 public class ComponentAssets
-    extends EntityElementSource<Asset>
+    extends ValueElementSource<Asset>
 {
   public ComponentAssets() {
     super(Asset.class);
