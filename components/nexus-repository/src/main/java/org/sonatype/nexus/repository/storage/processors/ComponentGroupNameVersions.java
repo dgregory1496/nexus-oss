@@ -2,7 +2,6 @@ package org.sonatype.nexus.repository.storage.processors;
 
 import java.util.List;
 
-import org.sonatype.nexus.repository.storage.Processor;
 import org.sonatype.nexus.repository.storage.ProcessorContext;
 import org.sonatype.nexus.repository.storage.StorageFacet;
 import org.sonatype.nexus.repository.storage.StorageTx;
@@ -13,24 +12,20 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 
 /**
- * Component version iterating processor, requires {@link StorageFacet#P_GROUP} and {@link StorageFacet#P_NAME}
- * attributes set in context.
+ * Distinct component versions source for a given group and name. Requires {@link StorageFacet#P_GROUP} and {@link
+ * StorageFacet#P_NAME} in context.
  *
  * @since 3.0
  */
-public class VersionProcessor
-    extends Processor
+public class ComponentGroupNameVersions
+    extends StringElementSource
 {
-  @Override
-  public void process(final ProcessorContext context) {
-    List<String> versions = versions(context);
-    for (String version : versions) {
-      context.getAttributes().set(StorageFacet.P_VERSION, version);
-      context.proceed();
-    }
+  public ComponentGroupNameVersions() {
+    super(StorageFacet.P_VERSION);
   }
 
-  private List<String> versions(final ProcessorContext context) {
+  @Override
+  public List<String> elements(final ProcessorContext context) {
     final String group = context.getAttributes().require(StorageFacet.P_GROUP, String.class);
     final String name = context.getAttributes().require(StorageFacet.P_NAME, String.class);
     final List<String> versions = Lists.newArrayList();

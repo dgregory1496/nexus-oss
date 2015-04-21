@@ -2,8 +2,6 @@ package org.sonatype.nexus.repository.storage;
 
 import java.util.ListIterator;
 
-import javax.annotation.Nonnull;
-
 import org.sonatype.nexus.common.collect.AttributesMap;
 import org.sonatype.sisu.goodies.common.ComponentSupport;
 
@@ -35,9 +33,10 @@ public class ProcessorContext
 
   private final Supplier<StorageTx> storageTxSupplier;
 
-  private ListIterator<Processor> processors;
+  private final ListIterator<Processor> processors;
 
-  public ProcessorContext(final Supplier<StorageTx> storageTxSupplier, final ListIterator<Processor> processors)
+  public ProcessorContext(final Supplier<StorageTx> storageTxSupplier,
+                          final ListIterator<Processor> processors)
   {
     this.storageTxSupplier = checkNotNull(storageTxSupplier);
     this.processors = checkNotNull(processors);
@@ -52,9 +51,7 @@ public class ProcessorContext
     return storageTxSupplier;
   }
 
-  @Nonnull
   public void proceed() {
-    checkNotNull(processors);
     if (!processors.hasNext()) {
       log.debug("Processors exhausted");
     }

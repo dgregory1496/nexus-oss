@@ -12,6 +12,10 @@
  */
 package org.sonatype.nexus.repository.storage;
 
+import java.util.Map;
+
+import javax.annotation.Nullable;
+
 import org.sonatype.nexus.repository.Facet;
 
 /**
@@ -63,7 +67,7 @@ public interface StorageFacet
                  Visitor<T> visitor);
 
   /**
-   * Invokes passed in {@link Processor}s in context of this storage facet.
+   * Invokes passed in {@link Processor}s in context of this storage facet with optional initial context, if any.
    */
-  void process(Processor... processors);
+  void process(@Nullable Map<String, Object> initialContext, Processor... processors);
 }

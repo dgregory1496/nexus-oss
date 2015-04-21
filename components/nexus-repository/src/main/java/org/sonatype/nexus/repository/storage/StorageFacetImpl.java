@@ -15,7 +15,9 @@ package org.sonatype.nexus.repository.storage;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -209,7 +211,7 @@ public class StorageFacetImpl
   }
 
   @Override
-  public void process(final Processor... processors) {
+  public void process(final @Nullable Map<String, Object> initialContext, final Processor... processors) {
     final ProcessorContext context = new ProcessorContext(
         new Supplier<StorageTx>()
         {
@@ -220,6 +222,9 @@ public class StorageFacetImpl
         },
         Arrays.asList(processors).listIterator()
     );
+    if (initialContext != null) {
+      context.getAttributes().backing().putAll(initialContext);
+    }
     context.proceed();
   }
 }
