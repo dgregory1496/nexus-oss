@@ -64,6 +64,22 @@ Ext.define('NX.coreui.view.repository.RepositorySettingsForm', {
         allowBlank: true,
         readOnly: true
       },
+
+      {
+        xtype: 'textfield',
+        name: 'url',
+        itemId: 'url',
+        fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_URL'),
+        allowBlank: true,
+        readOnly: true
+      },
+      {
+        xtype: 'checkbox',
+        name: 'online',
+        fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_ONLINE'),
+        helpText: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_ONLINE_HELP'),
+        value: true
+      }
     ]);
 
     me.callParent(arguments);
