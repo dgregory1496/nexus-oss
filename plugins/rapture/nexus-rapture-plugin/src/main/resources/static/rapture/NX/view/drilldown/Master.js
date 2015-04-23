@@ -20,6 +20,10 @@
 Ext.define('NX.view.drilldown.Master', {
   extend: 'Ext.grid.Panel',
   alias: 'widget.nx-drilldown-master',
+  
+  mixins: [
+      'NX.LogAware'
+  ],
 
   maskElement: 'body',
 
@@ -28,6 +32,15 @@ Ext.define('NX.view.drilldown.Master', {
    */
   initComponent: function() {
     var me = this;
+
+    if(!Ext.isEmpty(me.alias) && !Ext.Array.contains(me.alias, 'widget.nx-drilldown-master')) {
+      var widgetId = me.alias[0].replace(/^(widget\.)/, ""); // given possibly multiple aliases, just pick the first
+      me.logDebug('Setting stateful under stateId: ' + widgetId);
+      Ext.apply(me, {
+        stateful: true,
+        stateId: widgetId
+      });
+    }
 
     me.callParent(arguments);
 
@@ -57,6 +70,7 @@ Ext.define('NX.view.drilldown.Master', {
         sortable: false,
         menuDisabled: true,
         resizable: false,
+        draggable: false,
         cls: 'nx-drilldown-affordance',
 
         defaultRenderer: function() {
