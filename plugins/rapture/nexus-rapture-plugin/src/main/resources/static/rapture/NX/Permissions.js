@@ -11,7 +11,6 @@
  * Eclipse Foundation. All other trademarks are the property of their respective owners.
  */
 /*global Ext*/
-/*jslint bitwise: true*/
 
 /**
  * Permissions helper.
@@ -20,13 +19,6 @@
  */
 Ext.define('NX.Permissions', {
   singleton: true,
-
-  READ: 1,   // 0001
-  UPDATE: 2, // 0010
-  DELETE: 4, // 0100
-  CREATE: 8, // 1000
-  ALL: 15,   // 1111
-  NONE: 0,   // 0000
 
   /**
    * @private
@@ -38,7 +30,7 @@ Ext.define('NX.Permissions', {
    * @public
    * @returns {boolean} If permissions had been set (loaded from server)
    */
-  available: function () {
+  available: function() {
     var me = this;
     return Ext.isDefined(me.permissions);
   },
@@ -46,13 +38,13 @@ Ext.define('NX.Permissions', {
   /**
    * @public
    */
-  setPermissions: function (permissions) {
+  setPermissions: function(permissions) {
     var me = this,
         perms = permissions;
 
     if (Ext.isArray(permissions)) {
       perms = {};
-      Ext.each(permissions, function (entry) {
+      Ext.each(permissions, function(entry) {
         if (entry.id && entry.value) {
           perms[entry.id] = entry.value;
         }
@@ -62,44 +54,41 @@ Ext.define('NX.Permissions', {
     me.permissions = Ext.apply({}, perms);
   },
 
-  resetPermissions: function () {
+  resetPermissions: function() {
     delete this.permissions;
   },
 
   /**
    * @public
    */
-  check: function (value, perm /* , perm... */) {
-    var me = this,
-        p = me.asPermission(perm),
-        pVal,
-        perms;
+  check: function(value, perm) {
+    var me = this;
 
     if (!me.available()) {
       return false;
     }
 
-    pVal = me.permissions[value] | me.NONE;
-
-    if (arguments.length > 2) {
-      perms = [].slice.call(arguments, 2);
-      Ext.each(perms, function (entry) {
-        p = p | me.asPermission(entry);
-      });
-    }
-
-    return ((p & pVal) === p);
+    return me.permissions[value + ':' + perm] === true;
   },
 
-  /**
-   * @private
-   */
-  asPermission: function (value) {
-    var me = this;
-    if (!Ext.isDefined(value)) {
-      return me.ALL;
+  any: function(perm) {
+    var me = this,
+        hasAny = false;
+
+    if (!me.available()) {
+      return false;
     }
-    return Ext.isNumber(value) ? value : me[value.toUpperCase()];
+
+
+    Ext.Object.each(me.permissions, function(key, value) {
+      if (Ext.String.startsWith(key, perm) && value === true) {
+        hasAny = true;
+        return false;
+      }
+      return true;
+    });
+
+    return hasAny;
   }
 
 });

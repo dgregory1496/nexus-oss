@@ -13,6 +13,7 @@
 package org.sonatype.nexus.rapture.internal.ui
 
 import groovy.transform.ToString
+import org.apache.shiro.authz.permission.WildcardPermission
 
 /**
  * Permission exchange object.
@@ -24,5 +25,7 @@ class PermissionXO
 {
   String id
 
-  int value
+  static List<Set<String>> getParts(final WildcardPermission permission){
+    return permission.parts
+  }
 }
