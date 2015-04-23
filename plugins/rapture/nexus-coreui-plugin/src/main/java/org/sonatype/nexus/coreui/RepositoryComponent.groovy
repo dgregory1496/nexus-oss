@@ -17,6 +17,7 @@ import com.softwarementors.extjs.djn.config.annotations.DirectMethod
 import com.softwarementors.extjs.djn.config.annotations.DirectPollMethod
 import groovy.transform.PackageScope
 import org.apache.shiro.authz.annotation.RequiresAuthentication
+import org.apache.shiro.authz.annotation.RequiresPermissions
 import org.hibernate.validator.constraints.NotEmpty
 import org.sonatype.nexus.extdirect.DirectComponent
 import org.sonatype.nexus.extdirect.DirectComponentSupport
@@ -96,6 +97,7 @@ extends DirectComponentSupport
 
   @DirectMethod
   @RequiresAuthentication
+  @RequiresPermissions('nexus:repository-admin:*:*:add')
   @Validate(groups = [Create.class, Default.class])
   RepositoryXO create(final @NotNull(message = '[repository] may not be null') @Valid RepositoryXO repositoryXO) {
     return asRepository(repositoryManager.create(new Configuration(
