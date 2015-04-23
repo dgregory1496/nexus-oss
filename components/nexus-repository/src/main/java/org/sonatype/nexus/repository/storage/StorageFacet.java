@@ -61,12 +61,6 @@ public interface StorageFacet
   StorageTx openTx();
 
   /**
-   * Visits nodes selected by {@link Cursor}, using the passed in {@link Visitor}.
-   */
-  <T> void visit(Cursor<T> cursor,
-                 Visitor<T> visitor);
-
-  /**
    * Invokes passed in {@link Processor}s in context of this storage facet with optional initial context, if any.
    */
   void process(@Nullable Map<String, Object> initialContext, Processor... processors);

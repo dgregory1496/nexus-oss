@@ -14,7 +14,6 @@
 package org.sonatype.nexus.repository.storage;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -32,11 +31,10 @@ import org.sonatype.nexus.repository.config.Configuration;
 import org.sonatype.nexus.repository.config.ConfigurationFacet;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Stopwatch;
 import com.google.common.base.Supplier;
-import com.google.common.base.Throwables;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import org.hibernate.validator.constraints.NotEmpty;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.sonatype.nexus.common.stateguard.StateGuardLifecycleSupport.State.STARTED;
 
@@ -164,50 +162,6 @@ public class StorageFacetImpl
         new BlobTx(blobStore), databaseInstanceProvider.get().acquire(), bucket, config.writePolicy,
         bucketEntityAdapter, componentEntityAdapter, assetEntityAdapter
     ));
-  }
-
-  @Override
-  @Guarded(by = STARTED)
-  public <T> void visit(final Cursor<T> cursor,
-                        final Visitor<T> visitor)
-  {
-    checkNotNull(cursor);
-    checkNotNull(visitor);
-
-    final Stopwatch stopwatch = Stopwatch.createStarted();
-    try {
-      try (StorageTx tx = openTx()) {
-        log.debug("Visit before: cursor={}, visitor={}", cursor, visitor);
-        visitor.before(tx);
-      }
-      while (true) {
-        try (StorageTx tx = openTx()) {
-          try {
-            final List<T> nodes = cursor.next(tx);
-            if (nodes.isEmpty()) {
-              log.debug("Components cursor exhausted: cursor={}, visitor={}", cursor, visitor);
-              break;
-            }
-            for (T node : nodes) {
-              visitor.visit(tx, node);
-            }
-          }
-          catch (Exception e) {
-            log.warn("Visiting failed: cursor={}, visitor={}", cursor, visitor, e);
-            visitor.after(tx, e);
-            throw Throwables.propagate(e);
-          }
-        }
-      }
-      log.debug("Visit after: cursor={}, visitor={}", cursor, visitor);
-      try (StorageTx tx = openTx()) {
-        visitor.after(tx, null);
-      }
-    }
-    finally {
-      cursor.close();
-    }
-    log.debug("Visiting finished: cursor={}, visitor={}, time={}", cursor, visitor, stopwatch);
   }
 
   @Override
