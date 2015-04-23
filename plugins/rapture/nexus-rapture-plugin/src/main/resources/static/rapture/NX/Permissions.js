@@ -82,10 +82,6 @@ Ext.define('NX.Permissions', {
       return false;
     }
 
-    if (me.permissions['nexus:*'] === true) {
-      return true;
-    }
-
     Ext.Object.each(me.permissions, function(key, value) {
       if (Ext.String.startsWith(key, perm) && value === true) {
         hasAny = true;

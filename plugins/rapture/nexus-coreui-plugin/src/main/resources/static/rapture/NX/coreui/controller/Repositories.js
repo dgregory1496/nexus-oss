@@ -86,7 +86,6 @@ Ext.define('NX.coreui.controller.Repositories', {
       return NX.Permissions.checkAny('nexus:repository-admin') && NX.State.getUser();
     }
   },
-  permission: 'nexus:repositories',
 
   /**
    * @override
