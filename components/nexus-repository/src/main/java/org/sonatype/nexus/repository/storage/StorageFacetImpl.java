@@ -25,6 +25,7 @@ import javax.inject.Provider;
 import org.sonatype.nexus.blobstore.api.BlobStore;
 import org.sonatype.nexus.blobstore.api.BlobStoreManager;
 import org.sonatype.nexus.common.stateguard.Guarded;
+import org.sonatype.nexus.common.stateguard.StateGuardAspect;
 import org.sonatype.nexus.orient.DatabaseInstance;
 import org.sonatype.nexus.repository.FacetSupport;
 import org.sonatype.nexus.repository.config.Configuration;
@@ -36,7 +37,6 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import org.hibernate.validator.constraints.NotEmpty;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.sonatype.nexus.common.stateguard.StateGuardLifecycleSupport.State.STARTED;
 
@@ -160,10 +160,10 @@ public class StorageFacetImpl
 
   private StorageTx openStorageTx() {
     BlobStore blobStore = blobStoreManager.get(config.blobStoreName);
-    return new StorageTxImpl(
+    return StateGuardAspect.around(new StorageTxImpl(
         new BlobTx(blobStore), databaseInstanceProvider.get().acquire(), bucket, config.writePolicy,
         bucketEntityAdapter, componentEntityAdapter, assetEntityAdapter
-    );
+    ));
   }
 
   @Override
