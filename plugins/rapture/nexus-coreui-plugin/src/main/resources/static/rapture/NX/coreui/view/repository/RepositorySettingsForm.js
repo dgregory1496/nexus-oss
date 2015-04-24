@@ -48,24 +48,30 @@ Ext.define('NX.coreui.view.repository.RepositorySettingsForm', {
         items: [
           {
             xtype: 'textfield',
+            cls: 'nx-no-border',
             name: 'name',
             itemId: 'name',
+            labelAlign: 'left',
             fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_NAME'),
             readOnly: true,
             vtype: 'nx-name'
           },
           {
             xtype: 'textfield',
+            cls: 'nx-no-border',
             name: 'format',
             itemId: 'format',
+            labelAlign: 'left',
             fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_FORMAT'),
             allowBlank: true,
             readOnly: true
           },
           {
             xtype: 'textfield',
+            cls: 'nx-no-border',
             name: 'type',
             itemId: 'type',
+            labelAlign: 'left',
             fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_TYPE'),
             allowBlank: true,
             readOnly: true
@@ -73,8 +79,10 @@ Ext.define('NX.coreui.view.repository.RepositorySettingsForm', {
 
           {
             xtype: 'textfield',
+            cls: 'nx-no-border',
             name: 'url',
             itemId: 'url',
+            labelAlign: 'left',
             fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_URL'),
             allowBlank: true,
             readOnly: true
@@ -82,6 +90,7 @@ Ext.define('NX.coreui.view.repository.RepositorySettingsForm', {
           {
             xtype: 'checkbox',
             name: 'online',
+            labelAlign: 'left',
             fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_ONLINE'),
             helpText: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_ONLINE_HELP'),
             value: true

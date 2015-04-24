@@ -16766,9 +16766,19 @@
 }
 
 /**
+ * De-emphasizes fields that will never be edited
+ */
+/* line 50, ../../../baseapp/packages/rapture-theme/sass/src/Ext/form/field/Base.scss */
+.x-field.nx-no-border .x-form-field[readonly] {
+  border: none !important;
+  background-color: white !important;
+  padding-left: 0;
+}
+
+/**
  * IE10 adds a second 'x' icon to text fields. Hide this.
  */
-/* line 49, ../../../baseapp/packages/rapture-theme/sass/src/Ext/form/field/Base.scss */
+/* line 60, ../../../baseapp/packages/rapture-theme/sass/src/Ext/form/field/Base.scss */
 ::-ms-clear {
   width: 0;
   height: 0;
