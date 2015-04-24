@@ -41,10 +41,13 @@ public class Tester
 
     storageFacet.process(
         null, /* initial Ctx */
+        // TODO: narrow loops to given repository
         new Loop<>(new ComponentGroups()), // -- loop distinct(group)
         new GProcessor(metadataBuilder, metadataUpdater), // around groups
+        // TODO: narrow loops to given repository
         new Loop<>(new ComponentGroupNames()), // -- loop distinct(name)
         new AProcessor(metadataBuilder, metadataUpdater), // around names
+        // TODO: narrow loops to given repository
         new Loop<>(new ComponentGroupNameBaseVersions()), // -- loop distinct(attributes.maven2.baseVersion)
         new BVProcessor(metadataBuilder, metadataUpdater), // around baseVersion
         new MetadataProcessor(metadataBuilder, storageFacet, mavenFacet.getMavenPathParser()) // comp+asset
