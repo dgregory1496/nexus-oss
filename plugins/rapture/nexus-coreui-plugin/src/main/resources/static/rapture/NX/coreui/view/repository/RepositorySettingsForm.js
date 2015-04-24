@@ -57,7 +57,8 @@ Ext.define('NX.coreui.view.repository.RepositorySettingsForm', {
         name: 'name',
         itemId: 'name',
         fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_NAME'),
-        readOnly: true
+        readOnly: true,
+        vtype: 'nx-name'
       },
       {
         xtype: 'textfield',
@@ -103,7 +104,7 @@ Ext.define('NX.coreui.view.repository.RepositorySettingsForm', {
 
         Ext.Object.each(values, function(key, value) {
           var segments = key.split('.'),
-              parent = segments.length == 1 ? processed : processed['attributes'];
+              parent = processed;
 
           Ext.each(segments, function(segment, pos) {
             if (pos === segments.length - 1) {
@@ -134,9 +135,7 @@ Ext.define('NX.coreui.view.repository.RepositorySettingsForm', {
               });
             };
 
-        if (values['attributes']) {
-          process(values['attributes']);
-        }
+        process(values);
 
         this.callParent(arguments);
       }

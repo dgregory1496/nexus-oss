@@ -10,36 +10,25 @@
  * of Sonatype, Inc. Apache Maven is a trademark of the Apache Software Foundation. M2eclipse is a trademark of the
  * Eclipse Foundation. All other trademarks are the property of their respective owners.
  */
-/*global Ext, NX*/
+package org.sonatype.nexus.coreui
+
+import org.sonatype.nexus.repository.Repository
+import org.sonatype.nexus.repository.manager.RepositoryManager
+
+import com.google.inject.AbstractModule
 
 /**
- * Configuration for content type validation of Repository content.
- *
+ * Provide a mock RepositoryManager
+ * 
  * @since 3.0
  */
-Ext.define('NX.coreui.view.repository.facet.RawContentFacet', {
-  extend: 'Ext.form.FieldContainer',
-  alias: 'widget.nx-coreui-repository-content-rawcontent-facet',
-  requires: [
-    'NX.I18n'
-  ],
-
-  /**
-   * @override
-   */
-  initComponent: function() {
-    var me = this;
-
-    me.items = [
-      {
-        xtype: 'checkbox',
-        name: 'attributes.rawContent.strictContentTypeValidation',
-        fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_CONTENT_TYPE_VALIDATION'),
-        value: true
-      }
-    ];
-
-    me.callParent(arguments);
+class TestRepositoryManagerModule
+    extends AbstractModule
+{
+  public static final NAMES = ['foo', 'bar', 'baz'].asImmutable()
+  
+  @Override
+  protected void configure() {
+    bind(RepositoryManager).toInstance({ -> NAMES.collect { { -> it } as Repository } } as RepositoryManager);
   }
-
-});
+}
