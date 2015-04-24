@@ -42,7 +42,7 @@ Ext.define('NX.coreui.view.repository.facet.HttpFacet', {
       {
         xtype: 'fieldset',
         cls: 'nx-form-section',
-        title: 'HTTP',
+        title: NX.I18n.get('ADMIN_REPOSITORIES_DETAILS_SETTINGS_HTTP_FACET'),
 
         items: [
           {

@@ -40,7 +40,7 @@ Ext.define('NX.coreui.view.repository.facet.Maven2Facet', {
       {
         xtype: 'fieldset',
         cls: 'nx-form-section',
-        title: 'Maven 2',
+        title: NX.I18n.get('ADMIN_REPOSITORIES_DETAILS_SETTINGS_MAVEN2_FACET'),
 
         items: [
           {

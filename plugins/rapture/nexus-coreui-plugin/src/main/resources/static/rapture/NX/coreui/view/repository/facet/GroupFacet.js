@@ -71,7 +71,7 @@ Ext.define('NX.coreui.view.repository.facet.GroupFacet', {
       {
         xtype: 'fieldset',
         cls: 'nx-form-section',
-        title: 'Group',
+        title: NX.I18n.get('ADMIN_REPOSITORIES_DETAILS_SETTINGS_GROUP_FACET'),
 
         items: {
           xtype: 'nx-itemselector',

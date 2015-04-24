@@ -34,7 +34,7 @@ Ext.define('NX.coreui.view.repository.facet.RawContentFacet', {
       {
         xtype: 'fieldset',
         cls: 'nx-form-section',
-        title: 'Raw Content',
+        title: NX.I18n.get('ADMIN_REPOSITORIES_DETAILS_SETTINGS_RAW_FACET'),
 
         items: [
           {

@@ -38,7 +38,7 @@ Ext.define('NX.coreui.view.repository.facet.NegativeCacheFacet', {
       {
         xtype: 'fieldset',
         cls: 'nx-form-section',
-        title: 'Negative Cache',
+        title: NX.I18n.get('ADMIN_REPOSITORIES_DETAILS_SETTINGS_CACHE_FACET'),
 
         items: [
           {

@@ -38,7 +38,7 @@ Ext.define('NX.coreui.view.repository.facet.NugetProxyFacet', {
       {
         xtype: 'fieldset',
         cls: 'nx-form-section',
-        title: 'NuGet',
+        title: NX.I18n.get('ADMIN_REPOSITORIES_DETAILS_SETTINGS_NUGET_FACET'),
 
         items: [
           {

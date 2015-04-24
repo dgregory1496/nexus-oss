@@ -39,7 +39,7 @@ Ext.define('NX.coreui.view.repository.facet.StorageFacet', {
       {
         xtype: 'fieldset',
         cls: 'nx-form-section',
-        title: 'Storage',
+        title: NX.I18n.get('ADMIN_REPOSITORIES_DETAILS_SETTINGS_STORAGE_FACET'),
 
         items: [
           {
