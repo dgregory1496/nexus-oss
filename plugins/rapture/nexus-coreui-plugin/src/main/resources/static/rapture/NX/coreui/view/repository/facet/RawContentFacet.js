@@ -32,10 +32,18 @@ Ext.define('NX.coreui.view.repository.facet.RawContentFacet', {
 
     me.items = [
       {
-        xtype: 'checkbox',
-        name: 'attributes.rawContent.strictContentTypeValidation',
-        fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_CONTENT_TYPE_VALIDATION'),
-        value: true
+        xtype: 'fieldset',
+        cls: 'nx-form-section',
+        title: 'Raw Content',
+
+        items: [
+          {
+            xtype: 'checkbox',
+            name: 'attributes.rawContent.strictContentTypeValidation',
+            fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_CONTENT_TYPE_VALIDATION'),
+            value: true
+          }
+        ]
       }
     ];
 

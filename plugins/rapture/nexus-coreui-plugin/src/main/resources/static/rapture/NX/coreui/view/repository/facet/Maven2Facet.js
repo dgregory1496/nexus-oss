@@ -38,25 +38,33 @@ Ext.define('NX.coreui.view.repository.facet.Maven2Facet', {
 
     me.items = [
       {
-        xtype: 'combo',
-        name: 'attributes.maven.versionPolicy',
-        itemId: 'versionPolicy',
-        fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_POLICY'),
-        helpText: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_POLICY_HELP'),
-        emptyText: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_POLICY_PLACEHOLDER'),
-        editable: false,
-        store: [
-          ['RELEASE', NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_POLICY_RELEASE_ITEM')],
-          ['SNAPSHOT', NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_POLICY_SNAPSHOTS_ITEM')]
-        ],
-        value: 'RELEASE',
-        readOnly: true
-      },
-      {
-        xtype: 'checkbox',
-        name: 'attributes.maven.strictContentTypeValidation',
-        fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_CONTENT_TYPE_VALIDATION'),
-        value: true
+        xtype: 'fieldset',
+        cls: 'nx-form-section',
+        title: 'Maven 2',
+
+        items: [
+          {
+            xtype: 'combo',
+            name: 'attributes.maven.versionPolicy',
+            itemId: 'versionPolicy',
+            fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_POLICY'),
+            helpText: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_POLICY_HELP'),
+            emptyText: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_POLICY_PLACEHOLDER'),
+            editable: false,
+            store: [
+              ['RELEASE', NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_POLICY_RELEASE_ITEM')],
+              ['SNAPSHOT', NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_POLICY_SNAPSHOTS_ITEM')]
+            ],
+            value: 'RELEASE',
+            readOnly: true
+          },
+          {
+            xtype: 'checkbox',
+            name: 'attributes.maven.strictContentTypeValidation',
+            fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_CONTENT_TYPE_VALIDATION'),
+            value: true
+          }
+        ]
       }
     ];
     me.listeners = {
