@@ -28,7 +28,7 @@ Ext.define('NX.Permissions', {
 
   /**
    * @public
-   * @returns {boolean} If permissions had been set (loaded from server)
+   * @returns {boolean} True, if permissions had been set (loaded from server)
    */
   available: function() {
     var me = this;
@@ -37,6 +37,7 @@ Ext.define('NX.Permissions', {
 
   /**
    * @public
+   * Sets permissions.
    */
   setPermissions: function(permissions) {
     var me = this,
@@ -54,25 +55,31 @@ Ext.define('NX.Permissions', {
     me.permissions = Ext.apply({}, perms);
   },
 
+  /**
+   * @public
+   * Resets all permissions.
+   */
   resetPermissions: function() {
     delete this.permissions;
   },
 
   /**
    * @public
+   * @returns {boolean} True if user is authorized for expected permission.
    */
-  check: function(value, perm) {
+  check: function(name, perm) {
     var me = this;
 
     if (!me.available()) {
       return false;
     }
 
-    return me.permissions[value + ':' + perm] === true;
+    return me.permissions[name + ':' + perm] === true;
   },
 
   /**
    * @public
+   * @returns {boolean} True if user is authorized for at least one permission that starts with expected string.
    */
   checkAny: function(perm) {
     var me = this,

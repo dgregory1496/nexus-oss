@@ -226,17 +226,17 @@ public class SecurityComponent
     for (Privilege priv : securitySystem.listPrivileges()) {
       if (priv.getPermission() instanceof WildcardPermission) {
         WildcardPermission permission = (WildcardPermission) priv.getPermission();
-        List<Set<String>> parts = PermissionXO.getParts(permission);
-        process(0, parts, null, permissionList, permissionNameList);
+        List<Set<String>> parts = SecurityUtils.getParts(permission);
+        processParts(0, parts, null, permissionList, permissionNameList);
       }
     }
 
     boolean[] boolResults = subject.isPermitted(permissionList);
 
-    for (int ii = 0; ii < permissionList.size(); ii++) {
-      if (boolResults[ii]) {
+    for (int i = 0; i < permissionList.size(); i++) {
+      if (boolResults[i]) {
         PermissionXO permissionXO = new PermissionXO();
-        permissionXO.setId(permissionNameList.get(ii));
+        permissionXO.setId(permissionNameList.get(i));
         permissions.add(permissionXO);
       }
     }
@@ -252,13 +252,19 @@ public class SecurityComponent
     return permissions;
   }
 
-  private void process(final int i, final List<Set<String>> parts, final String name,
-                       final List<Permission> permissionList, final List<String> permissionNameList)
+  /**
+   * Expand multiple parts as for example nexus:foo:create,read into nexus:foo:create and nexus:foo:read
+   */
+  private void processParts(final int partIndex,
+                            final List<Set<String>> parts,
+                            final String name,
+                            final List<Permission> permissionList,
+                            final List<String> permissionNameList)
   {
-    for (String part : parts.get(i)) {
+    for (String part : parts.get(partIndex)) {
       String newName = name == null ? part : name + ":" + part;
-      if (i < parts.size() - 1) {
-        process(i + 1, parts, newName, permissionList, permissionNameList);
+      if (partIndex < parts.size() - 1) {
+        processParts(partIndex + 1, parts, newName, permissionList, permissionNameList);
       }
       else {
         permissionList.add(new WildcardPermission(newName));
