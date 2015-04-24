@@ -43,6 +43,12 @@ Ext.define('NX.coreui.view.task.TaskSelectType', {
     cls: 'nx-actions nx-borderless'
   }],
 
+  listeners: {
+    beforedestroy: function(me) {
+      me.getStore().clearFilter();
+    }
+  },
+
   plugins: [
     { ptype: 'gridfilterbox', emptyText: NX.I18n.get('ADMIN_TASKS_SELECT_LIST_FILTER_ERROR') }
   ]
