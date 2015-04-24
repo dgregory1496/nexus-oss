@@ -23,6 +23,11 @@ Ext.define('NX.coreui.view.repository.RepositoryList', {
   requires: [
     'NX.I18n'
   ],
+  
+  config: {
+    stateful: true,
+    stateId: 'nx-coreui-repository-list'
+  },
 
   store: 'NX.coreui.store.Repository',
   
@@ -32,13 +37,12 @@ Ext.define('NX.coreui.view.repository.RepositoryList', {
       width: 36,
       iconVariant: 'x16',
       iconNamePrefix: 'repository-',
-      dataIndex: 'type',
-      id: 'icon'
+      dataIndex: 'type'
     },
-    { header: NX.I18n.get('ADMIN_REPOSITORIES_LIST_NAME_COLUMN'), dataIndex: 'name', id: 'name', flex: 1 },
-    { header: NX.I18n.get('ADMIN_REPOSITORIES_LIST_TYPE_COLUMN'), dataIndex: 'type' , id: 'type' },
-    { header: NX.I18n.get('ADMIN_REPOSITORIES_LIST_FORMAT_COLUMN'), dataIndex: 'format', id: 'format' },
-    { header: NX.I18n.get('ADMIN_REPOSITORIES_LIST_STATUS_COLUMN'), dataIndex: 'status', id: 'status', flex: 1, 
+    { header: NX.I18n.get('ADMIN_REPOSITORIES_LIST_NAME_COLUMN'), dataIndex: 'name', stateId: 'name', flex: 1 },
+    { header: NX.I18n.get('ADMIN_REPOSITORIES_LIST_TYPE_COLUMN'), dataIndex: 'type' , stateId: 'type' },
+    { header: NX.I18n.get('ADMIN_REPOSITORIES_LIST_FORMAT_COLUMN'), dataIndex: 'format', stateId: 'format' },
+    { header: NX.I18n.get('ADMIN_REPOSITORIES_LIST_STATUS_COLUMN'), dataIndex: 'status', stateId: 'status', flex: 1, 
       xtype: 'templatecolumn', 
       tpl: new Ext.XTemplate(
           '<tpl if="status.online">',
@@ -57,7 +61,6 @@ Ext.define('NX.coreui.view.repository.RepositoryList', {
       xtype: 'nx-linkcolumn',
       header: NX.I18n.get('ADMIN_REPOSITORIES_LIST_URL_COLUMN'),
       dataIndex: 'url',
-      id: 'url',
       flex: 1
     }
   ],
@@ -84,7 +87,8 @@ Ext.define('NX.coreui.view.repository.RepositoryList', {
   }],
 
   plugins: [
-    { ptype: 'gridfilterbox', emptyText: NX.I18n.get('ADMIN_REPOSITORIES_LIST_FILTER_ERROR') }
+    { ptype: 'gridfilterbox', emptyText: NX.I18n.get('ADMIN_REPOSITORIES_LIST_FILTER_ERROR') },
+    { ptype: 'gridclearstate' }
   ]
 
 });
