@@ -122,13 +122,13 @@ public class MetadataBuilder
 
   private final List<Plugin> plugins;
 
-  public void onEnterGroup(final String groupId) {
+  public void onEnterGroupId(final String groupId) {
     setGroupId(groupId);
     plugins.clear();
   }
 
   @Nullable
-  public Metadata onExitGroup() {
+  public Metadata onExitGroupId() {
     checkState(getGroupId() != null, "groupId");
     if (plugins.isEmpty()) {
       log.debug("No plugins in group: {}:{}", getGroupId());
@@ -156,13 +156,13 @@ public class MetadataBuilder
 
   private final TreeSet<Version> baseVersions;
 
-  public void onEnterArtifact(final String artifactId) {
+  public void onEnterArtifactId(final String artifactId) {
     setArtifactId(artifactId);
     baseVersions.clear();
   }
 
   @Nullable
-  public Metadata onExitArtifact() {
+  public Metadata onExitArtifactId() {
     checkState(getArtifactId() != null, "artifactId");
     if (baseVersions.isEmpty()) {
       log.debug("Nothing to generate: {}:{}", getGroupId(), getArtifactId());

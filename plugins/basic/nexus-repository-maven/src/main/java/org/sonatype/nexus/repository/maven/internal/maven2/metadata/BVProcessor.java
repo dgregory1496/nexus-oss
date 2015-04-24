@@ -20,14 +20,19 @@ import org.apache.maven.artifact.repository.metadata.Metadata;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ArtifactProcessor
+/**
+ * Maven2 baseVersion processor.
+ *
+ * @since 3.0
+ */
+public class BVProcessor
     extends Processor
 {
   private final MetadataBuilder metadataBuilder;
 
   private final MetadataUpdater metadataUpdater;
 
-  public ArtifactProcessor(final MetadataBuilder metadataBuilder, final MetadataUpdater metadataUpdater)
+  public BVProcessor(final MetadataBuilder metadataBuilder, final MetadataUpdater metadataUpdater)
   {
     this.metadataBuilder = checkNotNull(metadataBuilder);
     this.metadataUpdater = checkNotNull(metadataUpdater);
@@ -35,10 +40,10 @@ public class ArtifactProcessor
 
   @Override
   public void process(final ProcessorContext context) {
-    final String artifactId = context.getAttributes().require(StorageFacet.P_NAME, String.class);
-    metadataBuilder.onEnterArtifact(artifactId);
+    final String baseVersion = context.getAttributes().require(StorageFacet.P_VERSION, String.class);
+    metadataBuilder.onEnterBaseVersion(baseVersion);
     context.proceed();
-    final Metadata metadata = metadataBuilder.onExitArtifact();
+    final Metadata metadata = metadataBuilder.onExitBaseVersion();
     if (metadata != null) {
       metadataUpdater.mayUpdateMetadata(metadata);
     }

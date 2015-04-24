@@ -20,14 +20,19 @@ import org.apache.maven.artifact.repository.metadata.Metadata;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class GroupProcessor
+/**
+ * Maven2 artifactId processor.
+ *
+ * @since 3.0
+ */
+public class AProcessor
     extends Processor
 {
   private final MetadataBuilder metadataBuilder;
 
   private final MetadataUpdater metadataUpdater;
 
-  public GroupProcessor(final MetadataBuilder metadataBuilder, final MetadataUpdater metadataUpdater)
+  public AProcessor(final MetadataBuilder metadataBuilder, final MetadataUpdater metadataUpdater)
   {
     this.metadataBuilder = checkNotNull(metadataBuilder);
     this.metadataUpdater = checkNotNull(metadataUpdater);
@@ -35,10 +40,10 @@ public class GroupProcessor
 
   @Override
   public void process(final ProcessorContext context) {
-    final String groupId = context.getAttributes().require(StorageFacet.P_GROUP, String.class);
-    metadataBuilder.onEnterGroup(groupId);
+    final String artifactId = context.getAttributes().require(StorageFacet.P_NAME, String.class);
+    metadataBuilder.onEnterArtifactId(artifactId);
     context.proceed();
-    final Metadata metadata = metadataBuilder.onExitGroup();
+    final Metadata metadata = metadataBuilder.onExitArtifactId();
     if (metadata != null) {
       metadataUpdater.mayUpdateMetadata(metadata);
     }

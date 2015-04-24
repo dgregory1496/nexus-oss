@@ -37,16 +37,16 @@ public class Tester
     final MavenFacet mavenFacet = repository.facet(MavenFacet.class);
 
     final MetadataBuilder metadataBuilder = new MetadataBuilder();
-    final MetadataUpdater metadataUpdater = new MetadataUpdater();
+    final MetadataUpdater metadataUpdater = new MetadataUpdater(mavenFacet);
 
     storageFacet.process(
         null, /* initial Ctx */
         new Loop<>(new ComponentGroups()), // -- loop distinct(group)
-        new GroupProcessor(metadataBuilder, metadataUpdater), // around groups
+        new GProcessor(metadataBuilder, metadataUpdater), // around groups
         new Loop<>(new ComponentGroupNames()), // -- loop distinct(name)
-        new ArtifactProcessor(metadataBuilder, metadataUpdater), // around names
+        new AProcessor(metadataBuilder, metadataUpdater), // around names
         new Loop<>(new ComponentGroupNameBaseVersions()), // -- loop distinct(attributes.maven2.baseVersion)
-        new BaseVersionProcessor(metadataBuilder, metadataUpdater), // around baseVersion
+        new BVProcessor(metadataBuilder, metadataUpdater), // around baseVersion
         new MetadataProcessor(metadataBuilder, storageFacet, mavenFacet.getMavenPathParser()) // comp+asset
     );
   }

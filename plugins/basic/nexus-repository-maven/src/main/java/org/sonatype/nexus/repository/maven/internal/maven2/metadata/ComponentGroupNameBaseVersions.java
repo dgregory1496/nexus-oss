@@ -6,8 +6,6 @@ import org.sonatype.nexus.repository.maven.internal.maven2.Maven2Format;
 import org.sonatype.nexus.repository.storage.ProcessorContext;
 import org.sonatype.nexus.repository.storage.StorageFacet;
 import org.sonatype.nexus.repository.storage.StorageTx;
-import org.sonatype.nexus.repository.storage.processors.ComponentGroupNameVersions;
-import org.sonatype.nexus.repository.storage.processors.ComponentGroupNames;
 import org.sonatype.nexus.repository.storage.processors.StringElementSource;
 
 import com.google.common.collect.Lists;
@@ -16,14 +14,11 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 
 /**
- * Distinct component (artifact) baseVersions source for a given groupId (group) and artifactId (name). Requires {@link
+ * Distinct baseVersion source for a given groupId (group) and artifactId (name). Requires {@link
  * StorageFacet#P_GROUP} and {@link StorageFacet#P_NAME} in context. This element source is {@link Maven2Format}
  * specific!
  *
  * @since 3.0
- * @see ComponentGroups
- * @see ComponentGroupNames
- * @see ComponentGroupNameVersions
  */
 public class ComponentGroupNameBaseVersions
     extends StringElementSource
@@ -39,7 +34,8 @@ public class ComponentGroupNameBaseVersions
     final List<String> versions = Lists.newArrayList();
     try (StorageTx tx = context.getStorageTxSupplier().get()) {
       Iterable<ODocument> docs = tx.getDb()
-          .command(new OCommandSQL("select distinct(attributes.maven2.baseVersion) as val from component where group=? and name=? limit -1"))
+          .command(new OCommandSQL(
+              "select distinct(attributes.maven2.baseVersion) as val from component where group=? and name=? limit -1"))
           .execute(group, name);
       for (ODocument doc : docs) {
         final String docVal = doc.field("val", OType.STRING);

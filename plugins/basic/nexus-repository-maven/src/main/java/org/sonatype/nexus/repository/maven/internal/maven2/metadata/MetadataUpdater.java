@@ -12,30 +12,30 @@
  */
 package org.sonatype.nexus.repository.maven.internal.maven2.metadata;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.NotThreadSafe;
-
+import org.sonatype.nexus.repository.maven.internal.MavenFacet;
 import org.sonatype.sisu.goodies.common.ComponentSupport;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import org.apache.maven.artifact.repository.metadata.Metadata;
-import org.apache.maven.artifact.repository.metadata.Plugin;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 /**
- * Maven 2 repository metadata builder.
+ * Maven 2 repository metadata updater.
  *
  * @since 3.0
  */
 public class MetadataUpdater
     extends ComponentSupport
 {
+  private final MavenFacet mavenFacet;
+
+  public MetadataUpdater(final MavenFacet mavenFacet) {
+    this.mavenFacet = checkNotNull(mavenFacet);
+  }
+
+  /**
+   * Writes if not exists, if exists, compares and merges if differs.
+   */
   public void mayUpdateMetadata(final Metadata metadata) {
     checkNotNull(metadata);
     // TODO:
