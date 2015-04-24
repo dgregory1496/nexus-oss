@@ -237,9 +237,7 @@ public class MavenFacetImpl
       componentAttributes.set(P_GROUP_ID, coordinates.getGroupId());
       componentAttributes.set(P_ARTIFACT_ID, coordinates.getArtifactId());
       componentAttributes.set(P_VERSION, coordinates.getVersion());
-      if (coordinates.isSnapshot()) {
-        componentAttributes.set(P_BASE_VERSION, coordinates.getBaseVersion());
-      }
+      componentAttributes.set(P_BASE_VERSION, coordinates.getBaseVersion());
       tx.saveComponent(component);
     }
 
@@ -255,9 +253,7 @@ public class MavenFacetImpl
       assetAttributes.set(P_GROUP_ID, coordinates.getGroupId());
       assetAttributes.set(P_ARTIFACT_ID, coordinates.getArtifactId());
       assetAttributes.set(P_VERSION, coordinates.getVersion());
-      if (coordinates.isSnapshot()) {
-        assetAttributes.set(P_BASE_VERSION, coordinates.getBaseVersion());
-      }
+      assetAttributes.set(P_BASE_VERSION, coordinates.getBaseVersion());
       assetAttributes.set(P_CLASSIFIER, coordinates.getClassifier());
       assetAttributes.set(P_EXTENSION, coordinates.getExtension());
 
