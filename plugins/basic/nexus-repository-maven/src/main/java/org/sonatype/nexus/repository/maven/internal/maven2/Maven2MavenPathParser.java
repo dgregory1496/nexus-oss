@@ -12,6 +12,10 @@
  */
 package org.sonatype.nexus.repository.maven.internal.maven2;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
+
 import javax.annotation.Nullable;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -98,6 +102,8 @@ public class Maven2MavenPathParser
       }
 
       String version = baseVersion;
+      Long timestamp = null;
+      Integer buildNumber = null;
       String tail;
       if (snapshot) {
         int vSnapshotStart = artifactId.length() + baseVersion.length() - 9 + 2;
@@ -112,16 +118,33 @@ public class Maven2MavenPathParser
           snapshotBuildNumber
               .append(str.substring(vSnapshotStart + version.length(), vSnapshotStart + version.length() + 8));
 
+          try {
+            final SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd.HHmmss-"); // TODO: trailing "-"
+            df.setTimeZone(TimeZone.getTimeZone("UTC"));
+            timestamp = Long.valueOf(df.parse(snapshotBuildNumber.toString()).getTime());
+          }
+          catch (ParseException e) {
+            // skip it
+          }
+
           int buildNumberCount = 0;
           int buildNumberPos = vSnapshotStart + snapshotBuildNumber.length();
+          final StringBuilder bnr = new StringBuilder();
           while (str.charAt(buildNumberPos) >= '0' && str.charAt(buildNumberPos) <= '9') {
             snapshotBuildNumber.append(str.charAt(buildNumberPos));
+            bnr.append(str.charAt(buildNumberPos));
             buildNumberPos++;
             buildNumberCount++;
           }
           if (buildNumberCount == 0) {
             return null;
           }
+          try {
+            buildNumber = Integer.parseInt(bnr.toString());
+          } catch (NumberFormatException e) {
+            // skip it
+          }
+
           int n = baseVersion.length() > 8 ? baseVersion.length() - 8 : 0;
           tail = str.substring(artifactId.length() + n + snapshotBuildNumber.length() + 1);
           version = baseVersion.substring(0, baseVersion.length() - 8) + snapshotBuildNumber;
@@ -154,6 +177,8 @@ public class Maven2MavenPathParser
           groupId,
           artifactId,
           version,
+          timestamp,
+          buildNumber,
           baseVersion,
           classifier,
           ext + extSuffix,
