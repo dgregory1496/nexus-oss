@@ -10,36 +10,39 @@
  * of Sonatype, Inc. Apache Maven is a trademark of the Apache Software Foundation. M2eclipse is a trademark of the
  * Eclipse Foundation. All other trademarks are the property of their respective owners.
  */
-/*global Ext, NX*/
+package org.sonatype.nexus.validation.internal;
+
+import javax.inject.Singleton;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorFactory;
+
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 /**
- * Configuration for content type validation of Repository content.
- *
+ * Allow ConstraintValidators to be enhanced by Guice.
+ * 
  * @since 3.0
  */
-Ext.define('NX.coreui.view.repository.facet.RawContentFacet', {
-  extend: 'Ext.form.FieldContainer',
-  alias: 'widget.nx-coreui-repository-content-rawcontent-facet',
-  requires: [
-    'NX.I18n'
-  ],
+@Singleton
+public final class GuiceConstraintValidatorFactory
+    implements ConstraintValidatorFactory
+{
 
-  /**
-   * @override
-   */
-  initComponent: function() {
-    var me = this;
+  private final Injector injector;
 
-    me.items = [
-      {
-        xtype: 'checkbox',
-        name: 'attributes.rawContent.strictContentTypeValidation',
-        fieldLabel: NX.I18n.get('ADMIN_REPOSITORIES_SETTINGS_CONTENT_TYPE_VALIDATION'),
-        value: true
-      }
-    ];
-
-    me.callParent(arguments);
+  @Inject
+  public GuiceConstraintValidatorFactory(final Injector injector) {
+    this.injector = injector;
   }
 
-});
+  public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> key) {
+    return this.injector.getInstance(key);
+  }
+
+  @Override
+  public void releaseInstance(final ConstraintValidator<?, ?> instance) {
+    //noop
+  }
+
+}
