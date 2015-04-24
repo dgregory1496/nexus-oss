@@ -36,16 +36,12 @@ public class MetadataProcessor
 {
   private final MetadataBuilder metadataBuilder;
 
-  private final StorageFacet storageFacet;
-
   private final MavenPathParser mavenPathParser;
 
   public MetadataProcessor(final MetadataBuilder metadataBuilder,
-                           final StorageFacet storageFacet,
                            final MavenPathParser mavenPathParser)
   {
     this.metadataBuilder = checkNotNull(metadataBuilder);
-    this.storageFacet = checkNotNull(storageFacet);
     this.mavenPathParser = checkNotNull(mavenPathParser);
   }
 
@@ -54,7 +50,7 @@ public class MetadataProcessor
     final String groupId = context.getAttributes().require(StorageFacet.P_GROUP, String.class);
     final String artifactId = context.getAttributes().require(StorageFacet.P_NAME, String.class);
     final String baseVersion = context.getAttributes().require(StorageFacet.P_VERSION, String.class);
-    try (StorageTx tx = storageFacet.openTx()) {
+    try (StorageTx tx = context.getStorageTxSupplier().get()) {
       final Iterable<Component> components = tx.findComponents(
           "group = :group and name = :name and attributes.maven2.baseVersion = :baseVersion",
           ImmutableMap.<String, Object>of("group", groupId, "name", artifactId, "baseVersion", baseVersion),
