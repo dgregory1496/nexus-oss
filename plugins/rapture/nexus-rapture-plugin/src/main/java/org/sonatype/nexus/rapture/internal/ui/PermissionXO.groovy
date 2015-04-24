@@ -25,7 +25,7 @@ class PermissionXO
 {
   String id
 
-  static List<Set<String>> getParts(final WildcardPermission permission){
+  static List<Set<String>> getParts(final WildcardPermission permission) {
     return permission.parts
   }
 }

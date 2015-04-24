@@ -12,13 +12,14 @@
  */
 package org.sonatype.nexus.coreui
 
-import com.softwarementors.extjs.djn.config.annotations.DirectAction
-import com.softwarementors.extjs.djn.config.annotations.DirectMethod
-import com.softwarementors.extjs.djn.config.annotations.DirectPollMethod
-import groovy.transform.PackageScope
-import org.apache.shiro.authz.annotation.RequiresAuthentication
-import org.apache.shiro.authz.annotation.RequiresPermissions
-import org.hibernate.validator.constraints.NotEmpty
+import javax.annotation.Nullable
+import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
+import javax.validation.Valid
+import javax.validation.constraints.NotNull
+import javax.validation.groups.Default
+
 import org.sonatype.nexus.extdirect.DirectComponent
 import org.sonatype.nexus.extdirect.DirectComponentSupport
 import org.sonatype.nexus.extdirect.model.StoreLoadParameters
@@ -37,13 +38,13 @@ import org.sonatype.nexus.validation.group.Create
 import org.sonatype.nexus.validation.group.Update
 import org.sonatype.nexus.web.BaseUrlHolder
 
-import javax.annotation.Nullable
-import javax.inject.Inject
-import javax.inject.Named
-import javax.inject.Singleton
-import javax.validation.Valid
-import javax.validation.constraints.NotNull
-import javax.validation.groups.Default
+import com.softwarementors.extjs.djn.config.annotations.DirectAction
+import com.softwarementors.extjs.djn.config.annotations.DirectMethod
+import com.softwarementors.extjs.djn.config.annotations.DirectPollMethod
+import groovy.transform.PackageScope
+import org.apache.shiro.authz.annotation.RequiresAuthentication
+import org.apache.shiro.authz.annotation.RequiresPermissions
+import org.hibernate.validator.constraints.NotEmpty
 
 /**
  * Repository {@link DirectComponent}.
