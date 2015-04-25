@@ -60,7 +60,7 @@ Ext.define('NX.coreui.controller.Repositories', {
   ],
   icons: {
     'repository-hosted': {
-      file: 'database_green.png',
+      file: 'database.png',
       variants: ['x16', 'x32']
     },
     'repository-proxy': {
@@ -79,13 +79,16 @@ Ext.define('NX.coreui.controller.Repositories', {
     description: NX.I18n.get('ADMIN_REPOSITORIES_SUBTITLE'),
     view: { xtype: 'nx-coreui-repository-feature' },
     iconConfig: {
-      file: 'database_green.png',
+      file: 'database.png',
       variants: ['x16', 'x32']
     },
     visible: function() {
+      // FIXME: This is not valid
       return NX.Permissions.check('nexus:repositories', 'read') && NX.State.getUser();
     }
   },
+
+  // FIXME: This is not valid
   permission: 'nexus:repositories',
 
   /**

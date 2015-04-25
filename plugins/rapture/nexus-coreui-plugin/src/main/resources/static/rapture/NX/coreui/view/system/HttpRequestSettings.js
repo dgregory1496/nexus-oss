@@ -13,47 +13,48 @@
 /*global Ext, NX*/
 
 /**
- * Upload artifact coordinates.
+ * Http request settings fields.
  *
  * @since 3.0
  */
-Ext.define('NX.coreui.view.upload.UploadArtifactCoordinates', {
+Ext.define('NX.coreui.view.system.HttpRequestSettings', {
   extend: 'Ext.form.FieldContainer',
-  alias: 'widget.nx-coreui-upload-artifact-coordinates',
+  alias: 'widget.nx-coreui-system-httprequestsettings',
   requires: [
     'NX.I18n'
   ],
 
-  defaults: {
-    xtype: 'textfield',
-    allowBlank: false
-  },
-
   items: [
     {
-      name: 'groupId',
-      itemId: 'groupId',
-      fieldLabel: NX.I18n.get('BROWSE_MAVEN_ARTIFACT_GROUP')
+      xtype: 'textfield',
+      name: 'userAgentCustomisation',
+      fieldLabel: NX.I18n.get('ADMIN_HTTP_CUSTOMIZATION'),
+      helpText: NX.I18n.get('ADMIN_HTTP_CUSTOMIZATION_HELP')
     },
     {
-      name: 'artifactId',
-      itemId: 'artifactId',
-      fieldLabel: NX.I18n.get('BROWSE_MAVEN_ARTIFACT_ID')
+      xtype: 'textfield',
+      name: 'urlParameters',
+      fieldLabel: NX.I18n.get('ADMIN_HTTP_PARAMETERS'),
+      helpText: NX.I18n.get('ADMIN_HTTP_PARAMETERS_HELP')
     },
     {
-      name: 'version',
-      itemId: 'version',
-      fieldLabel: NX.I18n.get('BROWSE_MAVEN_ARTIFACT_VERSION')
+      xtype: 'numberfield',
+      name: 'timeout',
+      fieldLabel: NX.I18n.get('ADMIN_HTTP_TIMEOUT'),
+      helpText: NX.I18n.get('ADMIN_HTTP_TIMEOUT_HELP'),
+      allowDecimals: false,
+      allowExponential: false,
+      minValue: 0,
+      maxValue: 3600
     },
     {
-      xtype: 'combo',
-      name: 'packaging',
-      itemId: 'packaging',
-      fieldLabel: NX.I18n.get('BROWSE_MAVEN_ARTIFACT_PACKAGING'),
-      queryMode: 'local',
-      displayField: 'name',
-      valueField: 'id',
-      store: ['pom', 'jar', 'ejb', 'war', 'ear', 'rar', 'par', 'maven-archetype', 'maven-plugin']
+      xtype: 'numberfield',
+      name: 'retries',
+      fieldLabel: NX.I18n.get('ADMIN_HTTP_ATTEMPTS'),
+      allowDecimals: false,
+      allowExponential: false,
+      minValue: 0,
+      maxValue: 10
     }
   ]
 

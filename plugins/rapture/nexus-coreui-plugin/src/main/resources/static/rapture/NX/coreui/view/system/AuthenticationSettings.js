@@ -17,11 +17,11 @@
  *
  * @since 3.0
  */
-Ext.define('NX.coreui_legacy.view.AuthenticationSettings', {
+Ext.define('NX.coreui.view.system.AuthenticationSettings', {
   extend: 'Ext.form.FieldContainer',
-  alias: 'widget.nx-coreui_legacy-authenticationsettings',
+  alias: 'widget.nx-coreui-system-authenticationsettings',
   requires: [
-    'NX.I18n',
+    'NX.I18n'
   ],
 
   namePrefix: undefined,
