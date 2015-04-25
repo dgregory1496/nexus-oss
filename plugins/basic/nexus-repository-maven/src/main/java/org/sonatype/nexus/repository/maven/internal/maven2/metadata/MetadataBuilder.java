@@ -90,6 +90,9 @@ public class MetadataBuilder
 
   public void setGroupId(final String groupId) {
     checkNotNull(groupId, "groupId");
+    if (Objects.equals(groupId, this.getGroupId())) {
+      return;
+    }
     this.groupId = groupId;
     this.artifactId = null;
     this.baseVersion = null;
@@ -102,6 +105,9 @@ public class MetadataBuilder
   public void setArtifactId(final String artifactId) {
     checkState(groupId != null, "groupId == null");
     checkNotNull(artifactId, "artifactId");
+    if (Objects.equals(artifactId, this.getArtifactId())) {
+      return;
+    }
     this.artifactId = artifactId;
     this.baseVersion = null;
   }
@@ -114,6 +120,9 @@ public class MetadataBuilder
     checkState(groupId != null, "groupId == null");
     checkState(artifactId != null, "artifactId == null");
     checkNotNull(baseVersion, "baseVersion");
+    if (Objects.equals(baseVersion, this.getBaseVersion())) {
+      return;
+    }
     this.baseVersion = baseVersion;
   }
 
