@@ -88,42 +88,45 @@ public class MetadataBuilder
     return groupId;
   }
 
-  public void setGroupId(final String groupId) {
+  public boolean setGroupId(final String groupId) {
     checkNotNull(groupId, "groupId");
     if (Objects.equals(groupId, this.getGroupId())) {
-      return;
+      return false;
     }
     this.groupId = groupId;
     this.artifactId = null;
     this.baseVersion = null;
+    return true;
   }
 
   public String getArtifactId() {
     return artifactId;
   }
 
-  public void setArtifactId(final String artifactId) {
+  public boolean setArtifactId(final String artifactId) {
     checkState(groupId != null, "groupId == null");
     checkNotNull(artifactId, "artifactId");
     if (Objects.equals(artifactId, this.getArtifactId())) {
-      return;
+      return false;
     }
     this.artifactId = artifactId;
     this.baseVersion = null;
+    return true;
   }
 
   public String getBaseVersion() {
     return baseVersion;
   }
 
-  public void setBaseVersion(final String baseVersion) {
+  public boolean setBaseVersion(final String baseVersion) {
     checkState(groupId != null, "groupId == null");
     checkState(artifactId != null, "artifactId == null");
     checkNotNull(baseVersion, "baseVersion");
     if (Objects.equals(baseVersion, this.getBaseVersion())) {
-      return;
+      return false;
     }
     this.baseVersion = baseVersion;
+    return true;
   }
 
   // -----------------------------------
@@ -132,8 +135,9 @@ public class MetadataBuilder
   private final List<Plugin> plugins;
 
   public void onEnterGroupId(final String groupId) {
-    setGroupId(groupId);
-    plugins.clear();
+    if (setGroupId(groupId)) {
+      plugins.clear();
+    }
   }
 
   @Nullable
@@ -166,8 +170,9 @@ public class MetadataBuilder
   private final TreeSet<Version> baseVersions;
 
   public void onEnterArtifactId(final String artifactId) {
-    setArtifactId(artifactId);
-    baseVersions.clear();
+    if (setArtifactId(artifactId)) {
+      baseVersions.clear();
+    }
   }
 
   @Nullable
@@ -246,9 +251,10 @@ public class MetadataBuilder
   private VersionCoordinates latestVersionCoordinates;
 
   public void onEnterBaseVersion(final String baseVersion) {
-    setBaseVersion(baseVersion);
-    latestVersionCoordinatesMap.clear();
-    latestVersionCoordinates = null;
+    if (setBaseVersion(baseVersion)) {
+      latestVersionCoordinatesMap.clear();
+      latestVersionCoordinates = null;
+    }
   }
 
   @Nullable
