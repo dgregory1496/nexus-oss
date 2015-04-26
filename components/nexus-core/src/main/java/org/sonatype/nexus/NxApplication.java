@@ -12,9 +12,6 @@
  */
 package org.sonatype.nexus;
 
-import java.io.File;
-import java.io.IOException;
-
 import javax.crypto.Cipher;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -39,9 +36,9 @@ import org.eclipse.sisu.bean.BeanManager;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * This is a component that "boots" Nexus up. See org.sonatype.nexus.web.NexusBooterListener for example.
+ * Boots Nexus application and critical components.
  *
- * @since 2.7.0
+ * @since 2.7
  */
 @Singleton
 @Named("NxApplication")
@@ -51,8 +48,6 @@ public class NxApplication
   private final EventBus eventBus;
 
   private final ApplicationStatusSource applicationStatusSource;
-
-  private final ApplicationDirectories applicationDirectories;
 
   private final ApplicationConfiguration applicationConfiguration;
 
@@ -66,7 +61,6 @@ public class NxApplication
 
   @Inject
   public NxApplication(final EventBus eventBus,
-                       final ApplicationDirectories applicationDirectories,
                        final ApplicationConfiguration applicationConfiguration,
                        final ApplicationStatusSource applicationStatusSource,
                        final SecuritySystem securitySystem,
@@ -76,7 +70,6 @@ public class NxApplication
   {
     this.eventBus = checkNotNull(eventBus);
     this.applicationStatusSource = checkNotNull(applicationStatusSource);
-    this.applicationDirectories = checkNotNull(applicationDirectories);
     this.applicationConfiguration = checkNotNull(applicationConfiguration);
     this.securitySystem = checkNotNull(securitySystem);
     this.eventSubscriberHost = checkNotNull(eventSubscriberHost);
@@ -124,29 +117,16 @@ public class NxApplication
       // force configuration load, validation and probable upgrade if needed
       // applies configuration and notifies listeners
       applicationConfiguration.loadConfiguration(true);
+
       // essential services
       securitySystem.start();
-      applicationConfiguration.createInternals();
 
       // notify about start other components participating in configuration framework
       eventBus.post(new ConfigurationChangeEvent(applicationConfiguration, null, null));
 
       applicationStatusSource.getSystemStatus().setState(SystemState.STARTED);
 
-      if (log.isInfoEnabled()) {
-        final File workDir = applicationDirectories.getWorkDirectory();
-        String workDirPath = null;
-        if (workDir != null) {
-          try {
-            workDirPath = workDir.getCanonicalPath();
-          }
-          catch (IOException ioe) {
-            workDirPath = workDir.getAbsolutePath();
-          }
-        }
-        log.info("Nexus Work Directory : {}", workDirPath);
-        log.info("Started {}", getNexusNameForLogs());
-      }
+      log.info("Started {}", getNexusNameForLogs());
       eventBus.post(new NexusStartedEvent(this));
     }
     catch (Exception e) {
@@ -167,7 +147,6 @@ public class NxApplication
     eventBus.post(new NexusStoppedEvent(this));
     eventSubscriberHost.stop();
 
-    applicationConfiguration.dropInternals();
     securitySystem.stop();
 
     // HACK: Must stop database services manually

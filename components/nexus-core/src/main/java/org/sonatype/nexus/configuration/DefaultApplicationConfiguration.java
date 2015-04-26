@@ -15,10 +15,6 @@ package org.sonatype.nexus.configuration;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -27,41 +23,26 @@ import javax.inject.Singleton;
 
 import org.sonatype.nexus.ApplicationDirectories;
 import org.sonatype.nexus.common.throwables.ConfigurationException;
-import org.sonatype.nexus.configuration.model.CPathMappingItem;
-import org.sonatype.nexus.configuration.model.CRepository;
 import org.sonatype.nexus.configuration.model.Configuration;
 import org.sonatype.nexus.configuration.source.ApplicationConfigurationSource;
 import org.sonatype.nexus.configuration.validator.ApplicationConfigurationValidator;
-import org.sonatype.nexus.configuration.validator.ApplicationValidationContext;
 import org.sonatype.nexus.events.AbstractVetoableEvent;
 import org.sonatype.nexus.events.Veto;
 import org.sonatype.nexus.jmx.reflect.ManagedAttribute;
 import org.sonatype.nexus.jmx.reflect.ManagedObject;
 import org.sonatype.nexus.jmx.reflect.ManagedOperation;
-import org.sonatype.nexus.proxy.AccessDeniedException;
-import org.sonatype.nexus.proxy.NoSuchRepositoryException;
 import org.sonatype.nexus.proxy.cache.CacheManager;
-import org.sonatype.nexus.proxy.registry.RepositoryRegistry;
-import org.sonatype.nexus.proxy.registry.RepositoryTypeDescriptor;
-import org.sonatype.nexus.proxy.registry.RepositoryTypeRegistry;
-import org.sonatype.nexus.proxy.repository.GroupRepository;
-import org.sonatype.nexus.proxy.repository.LocalStatus;
-import org.sonatype.nexus.proxy.repository.Repository;
 import org.sonatype.nexus.proxy.storage.local.DefaultLocalStorageContext;
 import org.sonatype.nexus.proxy.storage.local.LocalStorageContext;
 import org.sonatype.nexus.proxy.storage.remote.DefaultRemoteStorageContext;
 import org.sonatype.nexus.proxy.storage.remote.RemoteStorageContext;
 import org.sonatype.nexus.validation.ValidationResponse;
-import org.sonatype.nexus.validation.ValidationResponseException;
 import org.sonatype.sisu.goodies.common.ComponentSupport;
 import org.sonatype.sisu.goodies.eventbus.EventBus;
 
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
-import com.google.common.base.Throwables;
 import com.google.common.collect.Collections2;
-import com.google.inject.Key;
-import com.google.inject.name.Names;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.codehaus.plexus.util.ExceptionUtils;
@@ -103,15 +84,9 @@ public class DefaultApplicationConfiguration
 
   private final ApplicationConfigurationValidator configurationValidator;
 
-  private final RepositoryTypeRegistry repositoryTypeRegistry;
-
-  private final RepositoryRegistry repositoryRegistry;
-
   private final ClassLoader uberClassLoader;
 
   private final ApplicationDirectories applicationDirectories;
-
-  // ===
 
   /**
    * The global local storage context.
@@ -128,18 +103,6 @@ public class DefaultApplicationConfiguration
    */
   private File configurationDirectory;
 
-  /**
-   * The default maxInstance count
-   */
-  private int defaultRepositoryMaxInstanceCountLimit = Integer.MAX_VALUE;
-
-  /**
-   * The map with per-repotype limitations
-   */
-  private Map<RepositoryTypeDescriptor, Integer> repositoryMaxInstanceCountLimits;
-
-  // ==
-
   @Inject
   public DefaultApplicationConfiguration(final CacheManager cacheManager,
                                          final BeanLocator beanLocator,
@@ -148,8 +111,6 @@ public class DefaultApplicationConfiguration
                                          final Provider<GlobalRemoteConnectionSettings> globalRemoteConnectionSettingsProvider,
                                          final Provider<GlobalRemoteProxySettings> globalRemoteProxySettingsProvider,
                                          final ApplicationConfigurationValidator configurationValidator,
-                                         final RepositoryTypeRegistry repositoryTypeRegistry,
-                                         final RepositoryRegistry repositoryRegistry,
                                          final @Named("nexus-uber") ClassLoader uberClassLoader,
                                          final ApplicationDirectories applicationDirectories)
   {
@@ -160,11 +121,8 @@ public class DefaultApplicationConfiguration
     this.globalRemoteConnectionSettingsProvider = checkNotNull(globalRemoteConnectionSettingsProvider);
     this.globalRemoteProxySettingsProvider = checkNotNull(globalRemoteProxySettingsProvider);
     this.configurationValidator = checkNotNull(configurationValidator);
-    this.repositoryTypeRegistry = checkNotNull(repositoryTypeRegistry);
-    this.repositoryRegistry = checkNotNull(repositoryRegistry);
     this.uberClassLoader = checkNotNull(uberClassLoader);
     this.applicationDirectories = checkNotNull(applicationDirectories);
-
     this.configurationDirectory = applicationDirectories.getWorkDirectory("etc");
   }
 
@@ -358,9 +316,7 @@ public class DefaultApplicationConfiguration
 
   @Override
   @ManagedOperation
-  public synchronized void saveConfiguration()
-      throws IOException
-  {
+  public synchronized void saveConfiguration() throws IOException {
     if (applyConfiguration()) {
       // validate before we do anything
       ValidationResponse response = configurationValidator.validateModel(configurationSource.getConfiguration());
@@ -410,308 +366,5 @@ public class DefaultApplicationConfiguration
   @ManagedAttribute
   public File getConfigurationDirectory() {
     return configurationDirectory;
-  }
-
-
-  // ------------------------------------------------------------------
-  // Booting
-
-  @Override
-  public void createInternals() {
-    createRepositories();
-  }
-
-  @Override
-  public void dropInternals() {
-    dropRepositories();
-  }
-
-  private void createRepositories() {
-    List<CRepository> reposes = getConfigurationModel().getRepositories();
-
-    for (CRepository repo : reposes) {
-
-      if (!repo.getProviderRole().equals(GroupRepository.class.getName())) {
-        instantiateRepository(getConfigurationModel(), repo);
-      }
-    }
-
-    for (CRepository repo : reposes) {
-      if (repo.getProviderRole().equals(GroupRepository.class.getName())) {
-        instantiateRepository(getConfigurationModel(), repo);
-      }
-    }
-  }
-
-  private void dropRepositories() {
-    for (Repository repository : repositoryRegistry.getRepositories()) {
-      try {
-        repositoryRegistry.removeRepositorySilently(repository.getId());
-      }
-      catch (NoSuchRepositoryException e) {
-        // will not happen
-      }
-    }
-  }
-
-  private Repository instantiateRepository(final Configuration configuration, final CRepository repositoryModel) {
-    try {
-      // core realm will search child/plugin realms too
-      final Class<Repository> klazz = (Class<Repository>) uberClassLoader.loadClass(repositoryModel.getProviderRole());
-      return instantiateRepository(configuration, klazz, repositoryModel.getProviderHint(), repositoryModel);
-    }
-    catch (Exception e) {
-      Throwables.propagateIfInstanceOf(e, ConfigurationException.class);
-      throw new ConfigurationException("Cannot instantiate repository " + repositoryModel.getProviderRole() + ":" + repositoryModel.getProviderHint(), e);
-    }
-  }
-
-  private Repository createRepository(Class<? extends Repository> type, String name) {
-    try {
-      final Provider<? extends Repository> rp =
-          beanLocator.locate(Key.get(type, Names.named(name))).iterator().next().getProvider();
-      return rp.get();
-    }
-    catch (Exception e) {
-      throw new ConfigurationException("Could not lookup a new instance of Repository!", e);
-    }
-  }
-
-  private Repository instantiateRepository(final Configuration configuration,
-                                           final Class<? extends Repository> klazz,
-                                           final String name,
-                                           final CRepository repositoryModel)
-  {
-    checkRepositoryMaxInstanceCountForCreation(klazz, name, repositoryModel);
-
-    // create it, will do runtime validation
-    Repository repository = createRepository(klazz, name);
-    if (repository instanceof Configurable) {
-      ((Configurable) repository).configure(repositoryModel);
-    }
-
-    // register with repoRegistry
-    repositoryRegistry.addRepository(repository);
-
-    // give it back
-    return repository;
-  }
-
-  // ------------------------------------------------------------------
-  // CRUD-like ops on config sections
-  // Globals are mandatory: RU
-
-  // CRepository and CreposioryShadow helper
-
-  private ApplicationValidationContext getRepositoryValidationContext() {
-    ApplicationValidationContext result = new ApplicationValidationContext();
-
-    fillValidationContextRepositoryIds(result);
-
-    return result;
-  }
-
-  private void fillValidationContextRepositoryIds(ApplicationValidationContext context) {
-    context.addExistingRepositoryIds();
-
-    List<CRepository> repositories = getConfigurationModel().getRepositories();
-
-    if (repositories != null) {
-      for (CRepository repo : repositories) {
-        context.getExistingRepositoryIds().add(repo.getId());
-      }
-    }
-  }
-
-  // ----------------------------------------------------------------------------------------------------------
-  // Repositories
-  // ----------------------------------------------------------------------------------------------------------
-
-  private Map<RepositoryTypeDescriptor, Integer> getRepositoryMaxInstanceCountLimits() {
-    if (repositoryMaxInstanceCountLimits == null) {
-      repositoryMaxInstanceCountLimits = new ConcurrentHashMap<RepositoryTypeDescriptor, Integer>();
-    }
-
-    return repositoryMaxInstanceCountLimits;
-  }
-
-  @Override
-  public void setDefaultRepositoryMaxInstanceCount(int count) {
-    if (count < 0) {
-      log.info("Default repository maximal instance limit set to UNLIMITED.");
-
-      this.defaultRepositoryMaxInstanceCountLimit = Integer.MAX_VALUE;
-    }
-    else {
-      log.info("Default repository maximal instance limit set to " + count + ".");
-
-      this.defaultRepositoryMaxInstanceCountLimit = count;
-    }
-  }
-
-  @Override
-  public void setRepositoryMaxInstanceCount(RepositoryTypeDescriptor rtd, int count) {
-    if (count < 0) {
-      log.info("Repository type {} maximal instance limit set to UNLIMITED.", rtd);
-
-      getRepositoryMaxInstanceCountLimits().remove(rtd);
-    }
-    else {
-      log.info("Repository type {} maximal instance limit set to {}", rtd, count);
-
-      getRepositoryMaxInstanceCountLimits().put(rtd, count);
-    }
-  }
-
-  @Override
-  public int getRepositoryMaxInstanceCount(RepositoryTypeDescriptor rtd) {
-    Integer limit = getRepositoryMaxInstanceCountLimits().get(rtd);
-
-    if (null != limit) {
-      return limit;
-    }
-    else {
-      return defaultRepositoryMaxInstanceCountLimit;
-    }
-  }
-
-  private void checkRepositoryMaxInstanceCountForCreation(Class<? extends Repository> klazz,
-                                                          String name,
-                                                          CRepository repositoryModel)
-  {
-    RepositoryTypeDescriptor rtd =
-        repositoryTypeRegistry.getRepositoryTypeDescriptor(klazz, name);
-
-    int maxCount;
-
-    if (null == rtd) {
-      // no check done
-      String msg =
-          String.format(
-              "Repository \"%s\" (repoId=%s) corresponding type is not registered in Core, hence it's maxInstace check cannot be performed: Repository type %s:%s is unknown to Nexus Core. It is probably contributed by an old Nexus plugin. Please contact plugin developers to upgrade the plugin, and register the new repository type(s) properly!",
-              repositoryModel.getName(), repositoryModel.getId(), repositoryModel.getProviderRole(),
-              repositoryModel.getProviderHint());
-
-      log.warn(msg);
-
-      return;
-    }
-
-    if (rtd.getRepositoryMaxInstanceCount() != RepositoryTypeDescriptor.UNLIMITED_INSTANCES) {
-      maxCount = rtd.getRepositoryMaxInstanceCount();
-    }
-    else {
-      maxCount = getRepositoryMaxInstanceCount(rtd);
-    }
-
-    if (rtd.getInstanceCount() >= maxCount) {
-      String msg =
-          "Repository \"" + repositoryModel.getName() + "\" (id=" + repositoryModel.getId()
-              + ") cannot be created. It's repository type " + rtd + " is limited to " + maxCount
-              + " instances, and it already has " + rtd.getInstanceCount() + " of them.";
-
-      log.warn(msg);
-
-      throw new ConfigurationException(msg);
-    }
-  }
-
-  // CRepository: CRUD
-
-  private void validateRepository(CRepository settings, boolean create) {
-    ApplicationValidationContext ctx = getRepositoryValidationContext();
-
-    if (!create && !Strings.isNullOrEmpty(settings.getId())) {
-      // remove "itself" from the list to avoid hitting "duplicate repo" problem
-      ctx.getExistingRepositoryIds().remove(settings.getId());
-    }
-
-    ValidationResponse vr = configurationValidator.validateRepository(ctx, settings);
-
-    if (!vr.isValid()) {
-      throw new ValidationResponseException(vr);
-    }
-  }
-
-  @Override
-  public synchronized Repository createRepository(CRepository settings) throws IOException {
-    validateRepository(settings, true);
-
-    // create it, will do runtime validation
-    Repository repository = instantiateRepository(getConfigurationModel(), settings);
-
-    // now add it to config, since it is validated and successfully created
-    getConfigurationModel().addRepository(settings);
-
-    // save
-    saveConfiguration();
-
-    return repository;
-  }
-
-  @Override
-  @ManagedOperation
-  public void deleteRepository(String id)
-      throws NoSuchRepositoryException, IOException, AccessDeniedException
-  {
-    deleteRepository(id, false);
-  }
-
-  @Override
-  @ManagedOperation
-  public synchronized void deleteRepository(String id, boolean force)
-      throws NoSuchRepositoryException, IOException, AccessDeniedException
-  {
-    Repository repository = repositoryRegistry.getRepository(id);
-
-    if (!force && !repository.isUserManaged()) {
-      throw new AccessDeniedException("Not allowed to delete non-user-managed repository '" + id + "'.");
-    }
-
-    // put out of service so wont be accessed any longer
-    repository.setLocalStatus(LocalStatus.OUT_OF_SERVICE);
-    // disable indexing for same purpose
-    repository.setIndexable(false);
-    repository.setSearchable(false);
-
-    // ======
-    // groups
-    // (correction in config only, registry DOES handle it)
-    // since NEXUS-1770, groups are "self maintaining"
-
-    // ===========
-    // pahMappings
-    // (correction, since registry is completely unaware of this component)
-
-    List<CPathMappingItem> pathMappings = getConfigurationModel().getRepositoryGrouping().getPathMappings();
-
-    for (Iterator<CPathMappingItem> i = pathMappings.iterator(); i.hasNext(); ) {
-      CPathMappingItem item = i.next();
-
-      item.removeRepository(id);
-    }
-
-    // ===========
-    // and finally
-    // this cleans it properly from the registry (from reposes and repo groups)
-    repositoryRegistry.removeRepository(id);
-
-    List<CRepository> reposes = getConfigurationModel().getRepositories();
-
-    for (Iterator<CRepository> i = reposes.iterator(); i.hasNext(); ) {
-      CRepository repo = i.next();
-
-      if (repo.getId().equals(id)) {
-        i.remove();
-
-        saveConfiguration();
-
-        repository.dispose();
-
-        return;
-      }
-    }
-
-    throw new NoSuchRepositoryException(id);
   }
 }
