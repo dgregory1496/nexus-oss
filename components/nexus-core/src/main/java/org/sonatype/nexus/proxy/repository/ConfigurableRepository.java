@@ -22,8 +22,6 @@ import org.sonatype.nexus.configuration.model.CRepositoryCoreConfiguration;
 import org.sonatype.nexus.configuration.model.CRepositoryExternalConfigurationHolderFactory;
 import org.sonatype.nexus.proxy.LocalStorageException;
 import org.sonatype.nexus.proxy.item.RepositoryItemUid;
-import org.sonatype.nexus.proxy.mirror.DefaultPublishedMirrors;
-import org.sonatype.nexus.proxy.mirror.PublishedMirrors;
 import org.sonatype.sisu.goodies.eventbus.EventBus;
 
 import org.codehaus.plexus.util.StringUtils;
@@ -31,8 +29,6 @@ import org.codehaus.plexus.util.StringUtils;
 public class ConfigurableRepository
     extends AbstractConfigurable<CRepository>
 {
-  private PublishedMirrors pMirrors;
-  
   public ConfigurableRepository() {
     // empty for subclasses that are components and will be injected
   }
@@ -228,15 +224,6 @@ public class ConfigurableRepository
     getCurrentConfiguration(true).setNotFoundCacheActive(notFoundCacheActive);
   }
 
-  public PublishedMirrors getPublishedMirrors() {
-    if (pMirrors == null) {
-      pMirrors = new DefaultPublishedMirrors((CRepositoryCoreConfiguration) getCurrentCoreConfiguration());
-    }
-
-    return pMirrors;
-  }
-
-  // ==
 
   @Override
   public String toString() {
