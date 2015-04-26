@@ -10,33 +10,40 @@
  * of Sonatype, Inc. Apache Maven is a trademark of the Apache Software Foundation. M2eclipse is a trademark of the
  * Eclipse Foundation. All other trademarks are the property of their respective owners.
  */
-package org.sonatype.nexus.templates;
+package org.sonatype.nexus.events;
 
-import org.sonatype.nexus.configuration.CoreConfiguration;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public abstract class AbstractConfigurableTemplate
-    extends AbstractTemplate
-    implements ConfigurableTemplate
+// FIXME: Remove event veto concept
+
+@Deprecated
+public class AbstractVetoableEvent<T>
 {
-  private CoreConfiguration coreConfiguration;
+  private final ArrayList<Veto> vetos = new ArrayList<Veto>();
 
-  public AbstractConfigurableTemplate(TemplateProvider provider, String id, String description) {
-    super(provider, id, description);
+  public AbstractVetoableEvent(T component) {
   }
 
-  public CoreConfiguration getCoreConfiguration() {
-    if (coreConfiguration == null) {
-      coreConfiguration = initCoreConfiguration();
-    }
-
-    return coreConfiguration;
+  public List<Veto> getVetos() {
+    return Collections.unmodifiableList(vetos);
   }
 
-  public void setCoreConfiguration(CoreConfiguration coreConfiguration) {
-    this.coreConfiguration = coreConfiguration;
+  public boolean isVetoed() {
+    return !vetos.isEmpty();
   }
 
-  // ==
+  public void putVeto(Veto veto) {
+    vetos.add(veto);
+  }
 
-  protected abstract CoreConfiguration initCoreConfiguration();
+  public void putVeto(Object vetoer, Throwable reason) {
+    vetos.add(new Veto(vetoer, reason));
+  }
+
+  public boolean removeVeto(Veto veto) {
+    return vetos.remove(veto);
+  }
+
 }

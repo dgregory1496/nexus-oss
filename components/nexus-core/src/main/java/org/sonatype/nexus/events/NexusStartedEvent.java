@@ -10,28 +10,17 @@
  * of Sonatype, Inc. Apache Maven is a trademark of the Apache Software Foundation. M2eclipse is a trademark of the
  * Eclipse Foundation. All other trademarks are the property of their respective owners.
  */
-package org.sonatype.nexus.quartz;
-
-import org.sonatype.nexus.scheduling.TaskConfiguration;
-import org.sonatype.nexus.tasks.EmptyTrashTask;
-
-import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+package org.sonatype.nexus.events;
 
 /**
- * Smoke support.
+ * The event that is occured when nexus has started (fired as last step of boot process, everything is in place).
+ *
+ * @author cstamas
  */
-public class SmokeIT
-    extends QuartzITSupport
+public class NexusStartedEvent
+    extends NexusStateChangeEvent
 {
-  @Test
-  public void smoke() throws Exception {
-    final TaskConfiguration taskConfiguration = taskScheduler
-        .createTaskConfigurationInstance(EmptyTrashTask.class);
-    final EmptyTrashTask task = taskScheduler.createTaskInstance(taskConfiguration);
-
-    assertThat(taskConfiguration.getTypeId(), equalTo(task.taskConfiguration().getTypeId()));
+  public NexusStartedEvent(Object sender) {
+    super(sender);
   }
 }

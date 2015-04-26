@@ -10,15 +10,20 @@
  * of Sonatype, Inc. Apache Maven is a trademark of the Apache Software Foundation. M2eclipse is a trademark of the
  * Eclipse Foundation. All other trademarks are the property of their respective owners.
  */
-package org.sonatype.nexus.templates;
+package org.sonatype.nexus.events;
 
-import org.sonatype.nexus.configuration.CoreConfiguration;
-
-public interface ConfigurableTemplate
-    extends Template
+/**
+ * Event fired when Nexus has started to shutdown.
+ *
+ * This event is emitted just prior to {@link NexusStoppedEvent} and should be used only
+ * for an early hint that shutdown is going to occur, to stop network connections, etc.
+ *
+ * @since 2.0
+ */
+public class NexusStoppingEvent
+    extends NexusStateChangeEvent
 {
-  /**
-   * Returns the core configuration that this template holds.
-   */
-  CoreConfiguration getCoreConfiguration();
+  public NexusStoppingEvent(Object sender) {
+    super(sender);
+  }
 }

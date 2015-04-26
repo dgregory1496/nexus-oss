@@ -10,36 +10,17 @@
  * of Sonatype, Inc. Apache Maven is a trademark of the Apache Software Foundation. M2eclipse is a trademark of the
  * Eclipse Foundation. All other trademarks are the property of their respective owners.
  */
-package org.sonatype.nexus.tasks;
+package org.sonatype.nexus.events;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import org.sonatype.nexus.scheduling.TaskSupport;
-import org.sonatype.nexus.security.authz.AuthorizationConfigurationChanged;
-import org.sonatype.sisu.goodies.eventbus.EventBus;
-
-@Named
-public class PurgeApiKeysTask
-    extends TaskSupport
+/**
+ * The event that is occured when nexus has been stopped (fired as first step of shutdown process).
+ *
+ * @author cstamas
+ */
+public class NexusStoppedEvent
+    extends NexusStateChangeEvent
 {
-  private EventBus eventBus;
-
-  @Inject
-  public void setEventBus(final EventBus eventBus) {
-    this.eventBus = eventBus;
+  public NexusStoppedEvent(Object sender) {
+    super(sender);
   }
-
-  @Override
-  protected Void execute() {
-    // triggers the expiry of any orphaned cached user principals
-    eventBus.post(new AuthorizationConfigurationChanged());
-    return null;
-  }
-
-  @Override
-  public String getMessage() {
-    return "Purging Orphaned API Keys.";
-  }
-
 }
