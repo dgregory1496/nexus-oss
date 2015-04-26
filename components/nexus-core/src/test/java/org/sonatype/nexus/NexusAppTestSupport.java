@@ -22,15 +22,12 @@ import javax.servlet.ServletContext;
 import org.sonatype.nexus.configuration.ApplicationConfiguration;
 import org.sonatype.nexus.events.EventSubscriberHost;
 import org.sonatype.nexus.events.NexusStoppedEvent;
-import org.sonatype.nexus.proxy.maven.routing.Config;
-import org.sonatype.nexus.proxy.maven.routing.internal.ConfigImpl;
 import org.sonatype.nexus.scheduling.TaskScheduler;
 import org.sonatype.nexus.security.WebSecurityModule;
 import org.sonatype.nexus.security.subject.FakeAlmightySubject;
 import org.sonatype.nexus.test.NexusTestSupport;
 import org.sonatype.sisu.goodies.eventbus.EventBus;
 
-import com.google.inject.Binder;
 import com.google.inject.Module;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.After;
@@ -106,13 +103,6 @@ public abstract class NexusAppTestSupport
   protected void customizeModules(final List<Module> modules) {
     super.customizeModules(modules);
     modules.add(new WebSecurityModule(mock(ServletContext.class)));
-    modules.add(new Module()
-    {
-      @Override
-      public void configure(final Binder binder) {
-        binder.bind(Config.class).toInstance(new ConfigImpl(enableAutomaticRoutingFeature()));
-      }
-    });
   }
 
   @Override

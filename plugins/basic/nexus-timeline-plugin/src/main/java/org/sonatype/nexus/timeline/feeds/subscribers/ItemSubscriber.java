@@ -34,15 +34,16 @@ import org.sonatype.nexus.proxy.events.RepositoryItemValidationEventFailedChecks
 import org.sonatype.nexus.proxy.events.RepositoryItemValidationEventFailedFileType;
 import org.sonatype.nexus.proxy.item.StorageFileItem;
 import org.sonatype.nexus.proxy.item.uid.IsHiddenAttribute;
-import org.sonatype.nexus.proxy.maven.uid.IsMavenArtifactSignatureAttribute;
-import org.sonatype.nexus.proxy.maven.uid.IsMavenChecksumAttribute;
-import org.sonatype.nexus.proxy.maven.uid.IsMavenRepositoryMetadataAttribute;
 import org.sonatype.nexus.timeline.feeds.FeedEvent;
 import org.sonatype.nexus.timeline.feeds.FeedRecorder;
 
 import com.google.common.collect.Maps;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
+
+//import org.sonatype.nexus.proxy.maven.uid.IsMavenArtifactSignatureAttribute;
+//import org.sonatype.nexus.proxy.maven.uid.IsMavenChecksumAttribute;
+//import org.sonatype.nexus.proxy.maven.uid.IsMavenRepositoryMetadataAttribute;
 
 /**
  * Subscriber listening for events recorded under {@link FeedRecorder#FAMILY_ITEM} event type.
@@ -120,9 +121,9 @@ public class ItemSubscriber
     // filter out links and dirs/collections and hidden files
     if (StorageFileItem.class.isAssignableFrom(event.getItem().getClass())
         && !event.getItemUid().getBooleanAttributeValue(IsHiddenAttribute.class)
-        && !event.getItemUid().getBooleanAttributeValue(IsMavenRepositoryMetadataAttribute.class) // "maven-metadata.xml"
-        && !event.getItemUid().getBooleanAttributeValue(IsMavenArtifactSignatureAttribute.class) // "*.asc"
-        && !event.getItemUid().getBooleanAttributeValue(IsMavenChecksumAttribute.class) // "*.sha1" or "*.md5"
+        //&& !event.getItemUid().getBooleanAttributeValue(IsMavenRepositoryMetadataAttribute.class) // "maven-metadata.xml"
+        //&& !event.getItemUid().getBooleanAttributeValue(IsMavenArtifactSignatureAttribute.class) // "*.asc"
+        //&& !event.getItemUid().getBooleanAttributeValue(IsMavenChecksumAttribute.class) // "*.sha1" or "*.md5"
         && !((StorageFileItem) event.getItem()).isContentGenerated()) {
 
       String action;

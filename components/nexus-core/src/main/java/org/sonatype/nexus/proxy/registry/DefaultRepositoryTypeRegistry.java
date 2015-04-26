@@ -17,24 +17,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.sonatype.nexus.proxy.maven.maven1.M1GroupRepository;
-import org.sonatype.nexus.proxy.maven.maven1.M1LayoutedM2ShadowRepository;
-import org.sonatype.nexus.proxy.maven.maven1.M1Repository;
-import org.sonatype.nexus.proxy.maven.maven2.M2GroupRepository;
-import org.sonatype.nexus.proxy.maven.maven2.M2LayoutedM1ShadowRepository;
-import org.sonatype.nexus.proxy.maven.maven2.M2Repository;
-import org.sonatype.nexus.proxy.repository.GroupRepository;
 import org.sonatype.nexus.proxy.repository.Repository;
-import org.sonatype.nexus.proxy.repository.ShadowRepository;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,27 +44,27 @@ public class DefaultRepositoryTypeRegistry
   @Inject
   public DefaultRepositoryTypeRegistry(final Map<String, ContentClass> contentClasses) {
     this.contentClasses = checkNotNull(contentClasses);
-
-    Multimap<Class<? extends Repository>, RepositoryTypeDescriptor> result = ArrayListMultimap.create();
-    // fill in the defaults
-    Class<? extends Repository> role = null;
-    role = Repository.class;
-    result.put(role, new RepositoryTypeDescriptor(role, M1Repository.ID, "repositories",
-        RepositoryTypeDescriptor.UNLIMITED_INSTANCES));
-    result.put(role, new RepositoryTypeDescriptor(role, M2Repository.ID, "repositories",
-        RepositoryTypeDescriptor.UNLIMITED_INSTANCES));
-    role = ShadowRepository.class;
-    result.put(role, new RepositoryTypeDescriptor(role, M1LayoutedM2ShadowRepository.ID, "shadows",
-        RepositoryTypeDescriptor.UNLIMITED_INSTANCES));
-    result.put(role, new RepositoryTypeDescriptor(role, M2LayoutedM1ShadowRepository.ID, "shadows",
-        RepositoryTypeDescriptor.UNLIMITED_INSTANCES));
-    role = GroupRepository.class;
-    result.put(role, new RepositoryTypeDescriptor(role, M1GroupRepository.ID, "groups",
-        RepositoryTypeDescriptor.UNLIMITED_INSTANCES));
-    result.put(role, new RepositoryTypeDescriptor(role, M2GroupRepository.ID, "groups",
-        RepositoryTypeDescriptor.UNLIMITED_INSTANCES));
-    logger.info("Registered default repository types.");
-    this.repositoryTypeDescriptorsMap = result;
+    //
+    //Multimap<Class<? extends Repository>, RepositoryTypeDescriptor> result = ArrayListMultimap.create();
+    //// fill in the defaults
+    //Class<? extends Repository> role = null;
+    //role = Repository.class;
+    //result.put(role, new RepositoryTypeDescriptor(role, M1Repository.ID, "repositories",
+    //    RepositoryTypeDescriptor.UNLIMITED_INSTANCES));
+    //result.put(role, new RepositoryTypeDescriptor(role, M2Repository.ID, "repositories",
+    //    RepositoryTypeDescriptor.UNLIMITED_INSTANCES));
+    //role = ShadowRepository.class;
+    //result.put(role, new RepositoryTypeDescriptor(role, M1LayoutedM2ShadowRepository.ID, "shadows",
+    //    RepositoryTypeDescriptor.UNLIMITED_INSTANCES));
+    //result.put(role, new RepositoryTypeDescriptor(role, M2LayoutedM1ShadowRepository.ID, "shadows",
+    //    RepositoryTypeDescriptor.UNLIMITED_INSTANCES));
+    //role = GroupRepository.class;
+    //result.put(role, new RepositoryTypeDescriptor(role, M1GroupRepository.ID, "groups",
+    //    RepositoryTypeDescriptor.UNLIMITED_INSTANCES));
+    //result.put(role, new RepositoryTypeDescriptor(role, M2GroupRepository.ID, "groups",
+    //    RepositoryTypeDescriptor.UNLIMITED_INSTANCES));
+    //logger.info("Registered default repository types.");
+    //this.repositoryTypeDescriptorsMap = result;
   }
 
   protected Multimap<Class<? extends Repository>, RepositoryTypeDescriptor> getRepositoryTypeDescriptors() {

@@ -23,9 +23,6 @@ import org.sonatype.nexus.capability.Tag;
 import org.sonatype.nexus.capability.Taggable;
 import org.sonatype.nexus.formfields.FormField;
 import org.sonatype.nexus.formfields.RepositoryCombobox;
-import org.sonatype.nexus.proxy.maven.MavenRepository;
-import org.sonatype.nexus.proxy.maven.maven1.Maven1ContentClass;
-import org.sonatype.nexus.proxy.maven.maven2.Maven2ContentClass;
 import org.sonatype.nexus.proxy.repository.GroupRepository;
 import org.sonatype.nexus.proxy.repository.HostedRepository;
 import org.sonatype.nexus.proxy.repository.ProxyRepository;
@@ -37,6 +34,10 @@ import com.google.common.collect.Lists;
 import static org.sonatype.nexus.capability.CapabilityType.capabilityType;
 import static org.sonatype.nexus.capability.Tag.categoryTag;
 import static org.sonatype.nexus.capability.Tag.tags;
+
+//import org.sonatype.nexus.proxy.maven.MavenRepository;
+//import org.sonatype.nexus.proxy.maven.maven1.Maven1ContentClass;
+//import org.sonatype.nexus.proxy.maven.maven2.Maven2ContentClass;
 
 /**
  * A test/demo capability descriptor for using {@link RepositoryCombobox}.
@@ -72,19 +73,19 @@ public class RepositoryComboCapabilityDescriptor
             .excludingAnyOfFacets(GroupRepository.class),
         new RepositoryCombobox("virtual", "Virtual", "?", FormField.OPTIONAL)
             .includingAnyOfFacets(ShadowRepository.class),
-        new RepositoryCombobox("maven", "Maven", "?", FormField.OPTIONAL)
-            .includingAnyOfFacets(MavenRepository.class),
+        //new RepositoryCombobox("maven", "Maven", "?", FormField.OPTIONAL)
+        //    .includingAnyOfFacets(MavenRepository.class),
         new RepositoryCombobox("site", "Sites", "?", FormField.OPTIONAL)
-            .includingAnyOfFacets(WebSiteRepository.class),
-        new RepositoryCombobox("maven1", "Maven 1", "?", FormField.OPTIONAL)
-            .includingAnyOfFacets(MavenRepository.class)
-            .includingAnyOfContentClasses(Maven1ContentClass.ID),
-        new RepositoryCombobox("maven2", "Maven 2", "?", FormField.OPTIONAL)
-            .includingAnyOfFacets(MavenRepository.class)
-            .includingAnyOfContentClasses(Maven2ContentClass.ID),
-        new RepositoryCombobox("hosted!maven1", "Hosted except Maven 1", "?", FormField.OPTIONAL)
-            .includingAnyOfFacets(HostedRepository.class)
-            .excludingAnyOfContentClasses(Maven1ContentClass.ID)
+            .includingAnyOfFacets(WebSiteRepository.class)
+        //new RepositoryCombobox("maven1", "Maven 1", "?", FormField.OPTIONAL)
+        //    .includingAnyOfFacets(MavenRepository.class)
+        //    .includingAnyOfContentClasses(Maven1ContentClass.ID),
+        //new RepositoryCombobox("maven2", "Maven 2", "?", FormField.OPTIONAL)
+        //    .includingAnyOfFacets(MavenRepository.class)
+        //    .includingAnyOfContentClasses(Maven2ContentClass.ID),
+        //new RepositoryCombobox("hosted!maven1", "Hosted except Maven 1", "?", FormField.OPTIONAL)
+        //    .includingAnyOfFacets(HostedRepository.class)
+        //    .excludingAnyOfContentClasses(Maven1ContentClass.ID)
     );
   }
 
