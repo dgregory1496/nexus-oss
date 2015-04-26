@@ -31,8 +31,9 @@ public class ComponentGroupNameVersions
     final List<String> versions = Lists.newArrayList();
     try (StorageTx tx = context.getStorageTxSupplier().get()) {
       Iterable<ODocument> docs = tx.getDb()
-          .command(new OCommandSQL("select distinct(version) as val from component where group=? and name=? limit -1"))
-          .execute(group, name);
+          .command(new OCommandSQL("select distinct(version) as val from component where bucket=? and group=? and name=? limit -1"))
+              // TODO: bucket.rid!
+          .execute(tx.getBucket(), group, name);
       for (ODocument doc : docs) {
         final String docVal = doc.field("val", OType.STRING);
         versions.add(docVal);

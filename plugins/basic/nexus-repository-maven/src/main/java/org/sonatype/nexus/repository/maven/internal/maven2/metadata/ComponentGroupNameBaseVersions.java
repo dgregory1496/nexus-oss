@@ -36,6 +36,7 @@ public class ComponentGroupNameBaseVersions
       Iterable<ODocument> docs = tx.getDb()
           .command(new OCommandSQL(
               "select distinct(attributes.maven2.baseVersion) as val from component where bucket=? and group=? and name=? limit -1"))
+              // TODO: bucket.rid!
           .execute(tx.getBucket(), group, name);
       for (ODocument doc : docs) {
         final String docVal = doc.field("val", OType.STRING);

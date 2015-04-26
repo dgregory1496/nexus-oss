@@ -53,7 +53,8 @@ public class MetadataProcessor
     try (StorageTx tx = context.getStorageTxSupplier().get()) {
       final Iterable<Component> components = tx.findComponents(
           "bucket = :bucket and group = :group and name = :name and attributes.maven2.baseVersion = :baseVersion",
-          ImmutableMap.<String, Object>of("bucket", tx.getBucket(), "group", groupId, "name", artifactId, "baseVersion", baseVersion),
+          // TODO: bucket.rid!
+          ImmutableMap.of("bucket", tx.getBucket(), "group", groupId, "name", artifactId, "baseVersion", baseVersion),
           null,
           "order by version asc");
       for (Component component : components) {
