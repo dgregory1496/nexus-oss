@@ -28,8 +28,8 @@ public class ComponentGroups
     final List<String> groups = Lists.newArrayList();
     try (StorageTx tx = context.getStorageTxSupplier().get()) {
       final Iterable<ODocument> docs = tx.getDb()
-          .command(new OCommandSQL("select distinct(group) as val from component limit -1"))
-          .execute();
+          .command(new OCommandSQL("select distinct(group) as val from component where bucket=? limit -1"))
+          .execute(tx.getBucket());
       for (ODocument doc : docs) {
         final String docVal = doc.field("val", OType.STRING);
         groups.add(docVal);

@@ -52,8 +52,8 @@ public class MetadataProcessor
     final String baseVersion = context.getAttributes().require(StorageFacet.P_VERSION, String.class);
     try (StorageTx tx = context.getStorageTxSupplier().get()) {
       final Iterable<Component> components = tx.findComponents(
-          "group = :group and name = :name and attributes.maven2.baseVersion = :baseVersion",
-          ImmutableMap.<String, Object>of("group", groupId, "name", artifactId, "baseVersion", baseVersion),
+          "bucket = :bucket and group = :group and name = :name and attributes.maven2.baseVersion = :baseVersion",
+          ImmutableMap.<String, Object>of("bucket", tx.getBucket(), "group", groupId, "name", artifactId, "baseVersion", baseVersion),
           null,
           "order by version asc");
       for (Component component : components) {
