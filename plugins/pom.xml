@@ -48,7 +48,6 @@
     <module>internal</module>
     <module>rapture</module>
     <module>security</module>
-    <module>yum</module>
   </modules>
 
   <dependencyManagement>
@@ -229,20 +228,6 @@
         <artifactId>nexus-timeline-plugin</artifactId>
         <version>3.0.0-SNAPSHOT</version>
       </dependency>
-
-      <!-- yum -->
-
-      <dependency>
-        <groupId>org.sonatype.nexus.plugins</groupId>
-        <artifactId>nexus-yum-repository-plugin</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
-      </dependency>
-
-      <!--<dependency>-->
-        <!--<groupId>org.sonatype.nexus.plugins</groupId>-->
-        <!--<artifactId>nexus-yum-repository-client</artifactId>-->
-        <!--<version>3.0.0-SNAPSHOT</version>-->
-      <!--</dependency>-->
 
       <!-- wonderland -->
 
