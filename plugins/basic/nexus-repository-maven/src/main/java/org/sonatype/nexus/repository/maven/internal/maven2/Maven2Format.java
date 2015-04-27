@@ -34,6 +34,8 @@ public class Maven2Format
 
   public static final String METADATA_CONTENT_TYPE = ContentTypes.TEXT_XML;
 
+  public static final String HASH_CONTENT_TYPE = ContentTypes.TEXT_PLAIN;
+
   public Maven2Format() {
     super(NAME);
   }
