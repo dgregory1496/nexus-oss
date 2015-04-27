@@ -93,7 +93,7 @@ Ext.define('NX.ext.form.OptionalFieldSet', {
   setupMonitorOnChange: function(container, component) {
     var me = this;
 
-    if (me == container) {
+    if (me === container) {
       me.mon(component, 'change', function(field, newValue) {
         if (Ext.isDefined(newValue)) {
           me.expand();
