@@ -36,8 +36,6 @@ import org.sonatype.nexus.repository.maven.internal.MavenPathParser;
 public class Maven2MavenPathParser
     implements MavenPathParser
 {
-  private static final String MAVEN2_METADATA_NAME = "maven-metadata.xml";
-
   @Override
   public MavenPath parsePath(final String path) {
     final Coordinates coordinates = maven2LayoutedPathToCoordinates(path);
@@ -46,7 +44,7 @@ public class Maven2MavenPathParser
 
   @Override
   public boolean isRepositoryMetadata(final MavenPath path) {
-    return path.main().getFileName().equals(MAVEN2_METADATA_NAME);
+    return path.main().getFileName().equals(Maven2Format.METADATA_FILE_NAME);
   }
 
   /**
