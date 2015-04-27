@@ -60,7 +60,9 @@ public class MetadataProcessor
       for (Component component : components) {
         final Iterable<Asset> assets = tx.browseAssets(component);
         for (Asset asset : assets) {
-          final MavenPath mavenPath = mavenPathParser.parsePath(asset.name());
+          final MavenPath mavenPath = mavenPathParser.parsePath(
+              asset.formatAttributes().require(StorageFacet.P_PATH, String.class)
+          );
           metadataBuilder.addArtifactVersion(mavenPath);
           if ("maven-plugin".equals("TODO")) {
             metadataBuilder.addPlugin("", "", "");
