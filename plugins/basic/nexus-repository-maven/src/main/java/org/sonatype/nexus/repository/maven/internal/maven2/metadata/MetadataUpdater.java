@@ -107,7 +107,7 @@ public class MetadataUpdater
         sb.append("/").append(baseVersion);
       }
     }
-    sb.append("/").append(Maven2Format.METADATA_FILE_NAME);
+    sb.append("/").append(Maven2Format.METADATA_FILENAME);
     return sb.toString();
   }
 

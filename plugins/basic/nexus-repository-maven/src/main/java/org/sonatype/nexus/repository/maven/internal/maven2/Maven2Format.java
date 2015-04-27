@@ -30,11 +30,20 @@ public class Maven2Format
 {
   public static final String NAME = "maven2";
 
-  public static final String METADATA_FILE_NAME = "maven-metadata.xml";
+  /**
+   * File name of Maven2 repository metadata files.
+   */
+  public static final String METADATA_FILENAME = "maven-metadata.xml";
 
+  /**
+   * Content type of Maven2 repository metadata files.
+   */
   public static final String METADATA_CONTENT_TYPE = ContentTypes.TEXT_XML;
 
-  public static final String HASH_CONTENT_TYPE = ContentTypes.TEXT_PLAIN;
+  /**
+   * Content Type of Maven2 checksum files (sha1, md5).
+   */
+  public static final String CHECKSUM_CONTENT_TYPE = ContentTypes.TEXT_PLAIN;
 
   public Maven2Format() {
     super(NAME);

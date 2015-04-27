@@ -44,7 +44,7 @@ public class Maven2MavenPathParser
 
   @Override
   public boolean isRepositoryMetadata(final MavenPath path) {
-    return path.main().getFileName().equals(Maven2Format.METADATA_FILE_NAME);
+    return path.main().getFileName().equals(Maven2Format.METADATA_FILENAME);
   }
 
   /**
@@ -95,7 +95,7 @@ public class Maven2MavenPathParser
         str = str.substring(0, str.length() - (signatureType.getExt().length() + 1));
       }
 
-      if (str.endsWith("maven-metadata.xml")) {
+      if (str.endsWith(Maven2Format.METADATA_FILENAME)) {
         return null;
       }
 

@@ -59,7 +59,7 @@ import org.joda.time.DateTime;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * Maven2 specific implementation of {@link GroupFacetImpl}: merge is specific to Maven2 only.
+ * Maven2 specific implementation of {@link GroupFacetImpl}: metadata merge is specific to Maven2 format.
  *
  * @since 3.0
  */
@@ -173,7 +173,7 @@ public class Maven2GroupFacet
     for (HashType hashType : HashType.values()) {
       final HashCode hashCode = hashCodes.get(hashType.getHashAlgorithm());
       if (hashCode != null) {
-        final Content hashContent = new Content(new StringPayload(hashCode.toString(), Maven2Format.HASH_CONTENT_TYPE));
+        final Content hashContent = new Content(new StringPayload(hashCode.toString(), Maven2Format.CHECKSUM_CONTENT_TYPE));
         hashContent.getAttributes().set(Content.CONTENT_LAST_MODIFIED, now);
         mavenFacet.put(mavenPath.hash(hashType), hashContent);
       }

@@ -27,7 +27,7 @@ import org.sonatype.nexus.repository.view.Context;
 import org.sonatype.nexus.repository.view.Response;
 
 /**
- * Maven2 group metadata handler: merge is specific to Maven2 only.
+ * Maven2 specific group metadata handler: metadata merge is specific to Maven2 format.
  *
  * @since 3.0
  */
